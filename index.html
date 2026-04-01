@@ -3,1433 +3,1057 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIKIDS - ប្រកួតអំណាន ភាសាខ្មែរ ២០២៥-២០២៦</title>
+<title>MyKids International School — Score Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Moul&family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;500;600;700&family=Moul&display=swap');
+:root{--navy:#1e3a8a;--red:#be123c;--gold:#f59e0b;--blue:#2563eb;--green:#15803d;--border:#e2e8f0;--sem1:#1e5a8a;--sem2:#1e6a5a;--calc:#7c3aed;--hw:#6d28d9;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans','Battambang',sans-serif;background:#eef2f7;min-height:100vh;}
 
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Noto Serif Khmer','Khmer OS Battambang',serif;
-  background: #eef2f8;
-  min-height: 100vh;
-}
+/* ── hide number input spinners ── */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+input[type=number]{-moz-appearance:textfield;}
 
-.app-header {
-  background: linear-gradient(135deg, #1a3a6b 0%, #2563b0 100%);
-  color: white; text-align: center;
-  padding: 18px 20px 14px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-}
-.app-header h1 { font-size: 20px; font-weight: bold; line-height: 1.4; }
-.app-header p  { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.app-header{background:linear-gradient(135deg,var(--navy)0%,#2d4fa3 50%,var(--blue)100%);padding:18px 30px 0;box-shadow:0 4px 20px rgba(30,58,138,.3);}
+.app-header-top{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.app-logo{width:70px;height:auto;filter:brightness(0) invert(1);}
+.app-title{font-family:'Playfair Display','Moul',serif;font-size:20pt;color:white;font-weight:700;line-height:1.2;}
+.app-subtitle{font-size:9.5pt;color:rgba(255,255,255,.75);margin-top:2px;}
+.tab-bar{display:flex;gap:4px;}
+.tab-btn{padding:12px 28px 14px;border:none;border-radius:10px 10px 0 0;font-family:'DM Sans',sans-serif;font-size:10.5pt;font-weight:600;cursor:pointer;transition:.2s;background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);position:relative;}
+.tab-btn:hover{background:rgba(255,255,255,.25);color:white;}
+.tab-btn.active{background:white;color:var(--navy);box-shadow:0 -3px 12px rgba(0,0,0,.1);}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--gold);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+.panel-body{max-width:1500px;margin:0 auto;padding:28px 20px;}
+.ctrl-card{background:white;padding:26px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.07);margin-bottom:24px;}
+.ctrl-card h2{font-family:'Moul','Playfair Display',serif;font-size:13pt;color:var(--navy);margin-bottom:18px;text-align:center;}
+.grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:15px;margin-bottom:18px;}
+label{display:block;font-size:8.5pt;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+select,input[type=text]{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:10pt;color:#1e293b;outline:none;transition:border .2s;}
+select:focus,input[type=text]:focus{border-color:var(--blue);}
+.btn{border:none;padding:11px 22px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:10pt;margin:4px;transition:.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.btn-navy{background:var(--navy);color:white;}
+.btn-red{background:var(--red);color:white;}
+.btn-green{background:var(--green);color:white;display:none;margin:18px auto;width:260px;font-size:11pt;justify-content:center;}
+.btn-moul{font-family:'Moul',serif;}
+.mode-bar{display:flex;gap:8px;margin-bottom:16px;align-items:center;}
+.mode-btn{padding:7px 18px;border-radius:8px;border:2px solid var(--border);background:white;font-family:inherit;font-size:9.5pt;font-weight:600;cursor:pointer;color:#64748b;transition:.2s;}
+.mode-btn.active{border-color:var(--navy);background:var(--navy);color:white;}
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
 
-.page-nav {
-  background: #1a3a6b; display: flex;
-  border-bottom: 3px solid #f6c23e;
-  flex-wrap: wrap;
-}
-.page-nav button {
-  padding: 11px 18px; border: none;
-  background: transparent; color: rgba(255,255,255,0.7);
-  font-family: inherit; font-size: 13px; font-weight: bold;
-  cursor: pointer; transition: all 0.2s;
-  border-bottom: 3px solid transparent; margin-bottom: -3px;
-}
-.page-nav button:hover { color: white; background: rgba(255,255,255,0.1); }
-.page-nav button.active { color: #f6c23e; border-bottom-color: #f6c23e; background: rgba(255,255,255,0.08); }
+/* ── Score table ── */
+table.score-tbl{min-width:100%;border-collapse:collapse;font-size:8pt;}
+.score-tbl th{background:var(--navy);color:white;padding:8px 5px;font-weight:600;font-size:7.5pt;text-align:center;border:1px solid rgba(255,255,255,.15);}
+.score-tbl th.h-sem1{background:var(--sem1);}
+.score-tbl th.h-sem2{background:var(--sem2);}
+.score-tbl th.h-calc{background:var(--calc);}
+.score-tbl th.h-dark{background:#334155;}
+.score-tbl td{border:1px solid #e2e8f0;padding:4px 3px;text-align:center;vertical-align:middle;}
+.score-tbl tbody tr:nth-child(even){background:#f8fafc;}
+.score-tbl tbody tr:hover{background:#eff6ff;}
 
-.judge-bar {
-  background: white; border-bottom: 3px solid #2563b0;
-  padding: 10px 16px; display: flex; align-items: center;
-  gap: 12px; flex-wrap: wrap;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* ── Score inputs — NO spinners, clean look ── */
+.sc-inp{
+  width:38px;padding:4px 2px;
+  border:1px solid #cbd5e1;border-radius:4px;
+  text-align:center;font-size:8pt;
+  background:white;
+  transition:border .15s,background .15s;
 }
-.judge-bar label { font-size: 14px; font-weight: bold; color: #1a3a6b; white-space: nowrap; }
-.judge-bar select, .ctrl-select {
-  padding: 7px 12px; border: 2px solid #2563b0;
-  border-radius: 8px; font-family: inherit;
-  font-size: 14px; color: #1a3a6b;
-  background: #f0f6ff; cursor: pointer;
-}
+.sc-inp:focus{outline:none;border-color:var(--blue);background:#eff6ff;}
+.sc-inp.inp-hw{width:38px;border:1.5px solid #a78bfa;background:#faf5ff;}
+.sc-inp.inp-mn{width:42px;border:1.5px solid var(--sem2);background:#f0fdf8;}
 
-.class-tabs {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  padding: 10px 16px; background: #e8eef7;
-  border-bottom: 2px solid #c5d5ea;
+/* ── Auto-calculated cells ── */
+.calc-cell{
+  background:#f5f3ff!important;
+  color:#6d28d9;font-weight:700;
+  font-size:8.5pt;min-width:46px;
+  padding:4px 5px;
 }
-.class-tab {
-  padding: 7px 14px; border: 2px solid #2563b0;
-  border-radius: 20px; background: white; color: #2563b0;
-  font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.2s;
+.rank-cell{
+  background:#fff7ed!important;
+  color:#c2410c;font-weight:800;
+  font-size:9pt;min-width:36px;
 }
-.class-tab:hover { background: #dce9ff; }
-.class-tab.active { background: #2563b0; color: white; }
+/* EN avg/grade */
+.avg-cell{background:#f0fdf4!important;color:#15803d;font-weight:700;font-size:8.5pt;}
+.grade-cell{font-weight:700;font-size:7.5pt;}
 
-.res-grade-tabs {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  padding: 0 0 12px 0;
+.score-tbl input.in-name{
+  width:128px;border:none;background:transparent;
+  font-size:8.5pt;font-family:'Battambang','DM Sans',sans-serif;
+  padding:2px 4px;
 }
-.res-grade-tab {
-  padding: 8px 16px; border: 2px solid #2563b0;
-  border-radius: 20px; background: white; color: #2563b0;
-  font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.2s;
-  font-weight: bold;
-}
-.res-grade-tab:hover { background: #dce9ff; }
-.res-grade-tab.active { background: #2563b0; color: white; }
+.score-tbl input.in-name:focus{outline:none;border-bottom:1px solid var(--blue);}
 
-.content { padding: 12px; }
-.page { display: none; }
-.page.active { display: block; }
-
-.table-card {
-  background: white; border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  overflow: hidden; margin-bottom: 16px;
-}
-.table-title {
-  background: linear-gradient(135deg, #1a3a6b, #2563b0);
-  color: white; padding: 12px 16px; font-size: 15px; font-weight: bold;
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 8px;
-}
-.score-table-wrap { overflow-x: auto; }
-.score-table {
-  width: 100%; border-collapse: collapse;
-  font-size: 13px; min-width: 750px;
-}
-.score-table th {
-  background: #1a3a6b; color: white;
-  padding: 9px 6px; text-align: center;
-  font-size: 12px; border: 1px solid #0f2547; line-height: 1.4;
-}
-.score-table td {
-  padding: 6px 5px; border: 1px solid #d0d7e3;
-  text-align: center; vertical-align: middle;
-}
-.score-table tr:nth-child(even) td { background: #f5f8ff; }
-.score-table tr:hover td { background: #e8f0ff; }
-.col-no   { width: 38px; font-weight: bold; color: #2563b0; }
-.col-name { text-align: left !important; padding-left: 10px !important; min-width: 140px; font-weight: 600; color: #1a3a6b; }
-.col-sex  { width: 38px; }
-.col-grade{ width: 65px; font-size: 12px; }
-.col-code { width: 65px; font-size: 12px; color: #555; }
-
-.score-input {
-  width: 52px; padding: 5px 3px;
-  border: 1.5px solid #b0c0dd; border-radius: 6px;
-  text-align: center; font-family: inherit; font-size: 13px;
-  background: #fff; transition: border-color 0.2s, background 0.2s;
-}
-.score-input:focus  { outline: none; border-color: #2563b0; background: #f0f6ff; }
-.score-input.over   { border-color: #e53e3e; background: #fff5f5; }
-.score-input.filled { border-color: #38a169; background: #f0fff4; }
-
-.total-cell { font-weight: bold; font-size: 15px; min-width: 48px; }
-.total-cell.good  { color: #38a169; }
-.total-cell.avg   { color: #d97706; }
-.total-cell.low   { color: #e53e3e; }
-.total-cell.empty { color: #aaa; }
-
-.btn {
-  padding: 9px 18px; border: none; border-radius: 8px; color: white;
-  font-family: inherit; font-size: 14px; font-weight: bold; cursor: pointer;
-  transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;
-}
-.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-.btn-save   { background: #2563b0; }
-.btn-export { background: #1a7a4a; }
-.btn-clear  { background: #9b2c2c; }
-.btn-pdf    { background: #c05621; font-size: 15px; padding: 11px 26px; }
-
-.action-bar {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  padding: 12px 16px; background: #f0f4fa;
-  border-top: 2px solid #e2e8f0;
-}
-
-.save-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #aaa; margin-right: 6px; }
-.save-dot.saved { background: #38a169; }
-.save-status { font-size: 12px; color: #555; display: flex; align-items: center; }
-
-.summary-panel { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 16px; margin-bottom: 16px; }
-.summary-panel h3 { color: #1a3a6b; font-size: 16px; border-bottom: 2px solid #2563b0; padding-bottom: 8px; margin-bottom: 12px; }
-.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-.summary-box { background: #f0f6ff; border: 2px solid #c5d5ea; border-radius: 8px; padding: 10px; text-align: center; }
-.summary-box .s-label { font-size: 12px; color: #555; margin-bottom: 4px; }
-.summary-box .s-val   { font-size: 22px; font-weight: bold; color: #1a3a6b; }
-
-.leaderboard { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 16px; margin-bottom: 16px; }
-.leaderboard h3 { color: #1a3a6b; font-size: 16px; border-bottom: 2px solid #f6c23e; padding-bottom: 8px; margin-bottom: 12px; }
-.lb-row { display: flex; align-items: center; padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; gap: 10px; }
-.lb-row:nth-child(1) { background: #fffbea; border: 2px solid #f6c23e; }
-.lb-row:nth-child(2) { background: #f8f8f8; border: 2px solid #cbd5e0; }
-.lb-row:nth-child(3) { background: #fff5ee; border: 2px solid #ed8936; }
-.lb-row:nth-child(n+4) { background: #f9fafb; border: 1px solid #e2e8f0; }
-.lb-rank  { font-size: 20px; width: 32px; text-align: center; }
-.lb-name  { flex: 1; font-weight: bold; font-size: 14px; color: #1a3a6b; }
-.lb-class { font-size: 12px; color: #666; }
-.lb-score { font-size: 18px; font-weight: bold; color: #2563b0; }
-
-.results-controls-bar {
-  background: white; border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  padding: 14px 16px; margin-bottom: 14px;
-  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
-}
-.results-controls-bar label { font-weight: bold; color: #1a3a6b; font-size: 14px; }
-
-.report-wrap {
-  background: white; border-radius: 10px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
-  padding: 24px 28px; margin-bottom: 16px;
-  max-width: 1000px; margin-left: auto; margin-right: auto;
-}
-.rpt-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.rpt-logo-box { display: flex; align-items: center; gap: 12px; }
-.rpt-logo-circle { width: 82px; height: 82px; object-fit: contain; flex-shrink: 0; }
-.rpt-school .km { font-family: 'Moul', 'Khmer OS Muol Light', serif; font-size: 14px; font-weight: 400; color: #c8102e; line-height: 1.5; }
-.rpt-school .en { font-size: 10px; color: #888; font-family: Arial,sans-serif; letter-spacing: 1px; }
-.rpt-right { text-align: right; font-size: 13px; line-height: 2.2; color: #222; }
-.rpt-right p {
-  font-family: 'Moul', 'Khmer OS Muol Light', serif;
-  font-size: 12px; font-weight: 400;
-  color: transparent;
-  background: linear-gradient(180deg, #2a2a2a 0%, #000 50%, #3a3a3a 100%);
-  -webkit-background-clip: text; background-clip: text;
-  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.8)) drop-shadow(0 -1px 0 rgba(0,0,0,0.25));
-  line-height: 1.8;
-}
-.rpt-right .stars { font-size: 18px; color: #c8102e; letter-spacing: 6px; }
-.rpt-title-box {
-  border-top: 2.5px solid #1a3a6b; border-bottom: 2.5px solid #1a3a6b;
-  padding: 12px 0 10px; text-align: center; margin: 12px 0;
-  background: linear-gradient(180deg, #f0f4ff 0%, #fff 50%, #f0f4ff 100%);
-  position: relative;
-}
-.rpt-title-box::before, .rpt-title-box::after {
-  content: '◆';
-  position: absolute; top: 50%; transform: translateY(-50%);
-  color: #C9A84C; font-size: 10px;
-}
-.rpt-title-box::before { left: 12px; }
-.rpt-title-box::after  { right: 12px; }
-.rpt-title-box h2 {
-  font-family: 'Moul', 'Khmer OS Muol Light', serif;
-  font-size: 18px; font-weight: 400;
-  color: transparent;
-  background: linear-gradient(180deg, #2a5298 0%, #0f2547 40%, #2a5298 100%);
-  -webkit-background-clip: text; background-clip: text;
-  text-shadow: none;
-  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.8)) drop-shadow(0 -1px 0 rgba(0,0,0,0.2));
-  letter-spacing: 0.5px; line-height: 1.4;
-}
-.rpt-title-box p  { font-size: 12.5px; color: #555; margin-top: 5px; }
-.rpt-stats {
-  background: #f5f8ff; border: 1px solid #c5d5ea;
-  border-radius: 6px; padding: 9px 14px;
-  font-size: 13px; color: #333; line-height: 1.9;
-  margin-bottom: 12px;
-}
-
-.rpt-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 14px; }
-.rpt-table th {
-  background: #1a3a6b; color: white;
-  padding: 8px 5px; text-align: center;
-  border: 1px solid #0f2547; font-size: 11.5px; line-height: 1.35;
-}
-.rpt-table td { padding: 6px 5px; border: 1px solid #bbb; text-align: center; vertical-align: middle; }
-.rpt-table tr:nth-child(even) td { background: #f5f8ff; }
-.rpt-table td.name-col { text-align: left; padding-left: 8px; font-weight: 600; color: #1a3a6b; min-width: 120px; }
-
-.rank-circle {
-  display: inline-block; width: 26px; height: 26px; border-radius: 50%;
-  line-height: 26px; text-align: center;
-  font-weight: bold; font-size: 12px; color: white;
-}
-.rank-1 { background: #d4a017; }
-.rank-2 { background: #9e9e9e; }
-.rank-3 { background: #cd7f32; }
-.rank-n { background: #1a3a6b; }
-.rank-none { color: #aaa; font-size: 12px; }
-
-.nittoes { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
-.nit-excellent { background: #c6f6d5; color: #22543d; }
-.nit-good      { background: #bee3f8; color: #2a4e7a; }
-.nit-average   { background: #fefcbf; color: #7b4f12; }
-.nit-fail      { background: #fed7d7; color: #822727; }
-.nit-none      { background: #eee; color: #888; }
-
-.rpt-footer { margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 12px; color: #444; }
-.rpt-legend { margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 10px; }
-.rpt-sigs { display: flex; justify-content: space-between; margin-top: 30px; font-size: 13px; font-weight: bold; color: #1a3a6b; }
-.rpt-sigs .sig-block { text-align: center; }
-.rpt-sigs .sig-block .sub { font-weight: normal; font-size: 12px; color: #777; margin-top: 3px; }
-
-.pdf-bar { text-align: center; padding: 14px 0 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-.toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: #1a3a6b; color: white;
-  padding: 12px 20px; border-radius: 10px;
-  font-size: 14px; z-index: 9999;
-  opacity: 0; transform: translateY(20px);
-  transition: all 0.3s; pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap');
-
-:root {
-  --gold:       #C9A84C;
-  --gold-light: #E8C96A;
-  --gold-pale:  #F5E9C8;
-  --navy:       #0B1F45;
-  --navy-mid:   #163260;
-  --ink:        #1a2a4a;
-  --cream:      #FDFAF3;
-  --parchment:  #F7F2E6;
-}
-
-.cert-filter-bar {
-  background: white; border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  padding: 14px 16px; margin-bottom: 16px;
-  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
-}
-.cert-filter-bar label { font-weight: bold; color: #1a3a6b; font-size: 14px; }
-
-.cert-area-wrap { max-width: 1040px; margin: 0 auto; }
-
-.cert-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-  gap: 32px; max-width: 1040px; margin: 0 auto 28px;
-}
-
-.certificate {
-  position: relative;
-  background: var(--cream);
-  font-family: 'Noto Serif Khmer','Khmer OS Battambang',serif;
-  box-shadow:
-    0 2px 0 #8a6a20,
-    0 12px 50px rgba(11,31,69,0.22),
-    0 4px 16px rgba(11,31,69,0.12);
-  overflow: visible;
-}
-
-.cert-border-outer {
-  position: absolute; inset: -2px;
-  border: 2px solid var(--gold);
-  pointer-events: none; z-index: 20;
-}
-.cert-border-inner {
-  position: absolute; inset: 5px;
-  border: 1px solid rgba(201,168,76,0.4);
-  pointer-events: none; z-index: 20;
-}
-.cert-border-inner::before,
-.cert-border-inner::after {
-  content: '◆';
-  position: absolute; color: var(--gold);
-  font-size: 8px; line-height: 1;
-}
-.cert-border-inner::before { top: -6px; left: 50%; transform: translateX(-50%); }
-.cert-border-inner::after  { bottom: -6px; left: 50%; transform: translateX(-50%); }
-
-.cert-ribbon {
-  position: relative;
-  background: var(--navy);
-  padding: 0;
-  overflow: hidden;
-  min-height: 110px;
-  display: flex; flex-direction: column;
-}
-.cert-ribbon::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 12px),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 12px);
-  z-index: 0;
-}
-.cert-ribbon-top-stripe {
-  height: 5px;
-  background: linear-gradient(90deg, var(--navy), var(--gold), var(--gold-light), var(--gold), var(--navy));
-  flex-shrink: 0;
-}
-.cert-ribbon-content {
-  position: relative; z-index: 2;
-  display: flex; align-items: center;
-  justify-content: center; gap: 14px;
-  padding: 16px 28px 14px; flex: 1;
-}
-.cert-ribbon-logo {
-  width: 58px; height: 58px; object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) brightness(1.05);
-  flex-shrink: 0;
-}
-.cert-ribbon-text { text-align: left; }
-.cert-ribbon-km {
-  font-family: 'Moul', 'Khmer OS Muol Light', serif;
-  font-size: 13px; font-weight: 400; color: #fff;
-  line-height: 1.4;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-}
-.cert-ribbon-en {
-  font-family: 'Cinzel', 'Georgia', serif;
-  font-size: 8.5px; letter-spacing: 2.5px;
-  color: var(--gold-light); text-transform: uppercase;
-  margin-top: 3px; opacity: 0.9;
-}
-.cert-ribbon-bottom {
-  height: 4px; flex-shrink: 0;
-  background: linear-gradient(90deg, var(--navy), var(--gold-light), var(--gold), var(--gold-light), var(--navy));
-}
-
-.cert-medal-badge {
-  display: flex; flex-direction: column;
-  align-items: center; margin: -10px 0 0;
-  position: relative; z-index: 5;
-}
-.cert-medal-circle {
-  width: 64px; height: 64px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36px; line-height: 1;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--cream), 0 0 0 5px var(--gold);
-  background: var(--cream);
-}
-.cert-medal-ribbon-bar {
-  width: 3px; height: 16px;
-  background: linear-gradient(180deg, var(--gold), var(--gold-pale));
-  margin-bottom: 0;
-}
-
-.cert-body {
-  position: relative; z-index: 2;
-  padding: 10px 36px 24px;
-  text-align: center;
-  background: linear-gradient(180deg, var(--cream) 0%, #fff 55%, var(--parchment) 100%);
-}
-.cert-seal {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 180px; height: 180px;
-  border-radius: 50%;
-  border: 12px double rgba(201,168,76,0.07);
-  pointer-events: none; z-index: 0;
-}
-.cert-seal::before {
-  content: 'MIKIDS';
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  font-family: 'Cinzel', serif;
-  font-size: 20px; font-weight: 700;
-  color: rgba(11,31,69,0.04); letter-spacing: 4px;
-  white-space: nowrap;
-}
-
-.cert-rank-label {
-  display: inline-block;
-  font-family: 'Cinzel', 'Georgia', serif;
-  font-size: 10px; letter-spacing: 3px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  position: relative;
-}
-.cert-rank-label::before,
-.cert-rank-label::after {
-  content: '— ';
-  opacity: 0.6;
-}
-
-.cert-title-km {
-  font-family: 'Moul', 'Khmer OS Muol Light', serif;
-  font-size: 24px; font-weight: 400;
-  color: transparent;
-  background: linear-gradient(180deg, #2a5298 0%, var(--navy) 50%, #2a5298 100%);
-  -webkit-background-clip: text; background-clip: text;
-  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.9)) drop-shadow(0 -1px 0 rgba(0,0,0,0.15));
-  margin: 0 0 2px; line-height: 1.4;
-  letter-spacing: 0.5px;
-}
-.cert-title-en {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 9px; color: #8a7560;
-  letter-spacing: 4px; text-transform: uppercase;
-  margin-bottom: 10px; opacity: 0.9;
-}
-
-.cert-ornament {
-  display: flex; align-items: center;
-  gap: 8px; margin: 6px auto 10px;
-  justify-content: center;
-}
-.cert-ornament-line {
-  height: 1px; flex: 1; max-width: 70px;
-  background: linear-gradient(90deg, transparent, var(--gold));
-}
-.cert-ornament-line.r {
-  background: linear-gradient(90deg, var(--gold), transparent);
-}
-.cert-ornament-gem { font-size: 12px; color: var(--gold); }
-
-.cert-event-tag {
-  display: inline-block;
-  background: var(--navy);
-  color: var(--gold-pale);
-  font-size: 10.5px; padding: 4px 16px;
-  letter-spacing: 0.5px; margin-bottom: 12px;
-}
-
-.cert-presents {
-  font-size: 11.5px; color: #a09070;
-  margin-bottom: 3px; font-style: italic;
-}
-
-.cert-name {
-  font-family: 'Moul', 'Khmer OS Muol Light', serif;
-  font-size: 20px; font-weight: 400;
-  color: var(--navy);
-  margin: 2px 0 4px; line-height: 1.5;
-  position: relative; display: inline-block;
-  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.9)) drop-shadow(0 -1px 0 rgba(0,0,0,0.1));
-}
-.cert-name-underline {
-  height: 2px; margin: 0 auto 10px;
-  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
-  max-width: 280px;
-}
-
-.cert-meta {
-  font-size: 11px; color: #a0907a;
-  margin-bottom: 12px; letter-spacing: 0.5px;
-  display: flex; gap: 8px; justify-content: center; align-items: center;
-  flex-wrap: wrap;
-}
-.cert-meta-dot { color: var(--gold); }
-
-.cert-score-display {
-  display: inline-flex;
-  align-items: center; gap: 0;
-  margin: 4px 0 8px;
-  border: 1.5px solid var(--gold);
-  overflow: hidden;
-}
-.cert-score-label {
-  background: var(--navy);
-  color: var(--gold-light);
-  padding: 7px 14px; font-size: 11px; letter-spacing: 0.5px;
-}
-.cert-score-value {
-  background: var(--gold-pale);
-  color: var(--navy);
-  padding: 7px 18px;
-  font-size: 22px; font-weight: 700;
-  line-height: 1; display: flex; align-items: baseline; gap: 2px;
-}
-.cert-score-slash { font-size: 14px; opacity: 0.5; margin: 0 1px; }
-.cert-score-max   { font-size: 14px; opacity: 0.7; }
-
-.cert-nit-badge {
-  display: inline-block; padding: 4px 20px;
-  font-size: 13px; font-weight: 700; margin: 2px 0 14px;
-  border: 1.5px solid currentColor;
-  letter-spacing: 0.5px;
-}
-
-.cert-footer-divider {
-  height: 1px; margin: 4px 0 12px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-.cert-footer {
-  display: flex; justify-content: space-between;
-  align-items: flex-end; padding: 0 8px;
-}
-.cert-sig { text-align: center; }
-.cert-sig-line {
-  height: 26px; width: 100px; margin: 0 auto 4px;
-  border-bottom: 1.5px solid var(--gold);
-}
-.cert-sig-name { font-size: 12px; font-weight: 700; color: var(--navy); }
-.cert-sig-sub   { font-size: 10px; color: #b0a090; }
-.cert-footer-date {
-  text-align: center; font-size: 10.5px; color: #a09070;
-  font-style: italic; line-height: 1.6;
-  font-family: 'IM Fell English', Georgia, serif;
-}
-
-.cert-rank-1 { --accent: #C9A84C; --accent-light: #E8C96A; --accent-pale: #FDF6E0; }
-.cert-rank-1 .cert-ribbon { background: linear-gradient(160deg, #3D2200 0%, #7A4A00 35%, #B87A00 65%, #7A4A00 100%); }
-.cert-rank-1 .cert-ribbon-top-stripe,
-.cert-rank-1 .cert-ribbon-bottom { background: linear-gradient(90deg, #3D2200, #FFE066, #FFF5A0, #FFE066, #3D2200); }
-.cert-rank-1 .cert-border-outer { border-color: #C9A84C; }
-.cert-rank-1 .cert-medal-circle { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--cream), 0 0 0 5px #C9A84C; }
-.cert-rank-1 .cert-event-tag    { background: #5a3600; }
-.cert-rank-1 .cert-score-display { border-color: #C9A84C; }
-.cert-rank-1 .cert-score-label  { background: #5a3600; }
-.cert-rank-1 .cert-score-value  { background: #FDF0CC; }
-.cert-rank-1 .cert-name-underline { background: linear-gradient(90deg, transparent, #C9A84C, #FFE066, #C9A84C, transparent); }
-
-.cert-rank-2 { --accent: #909090; }
-.cert-rank-2 .cert-ribbon { background: linear-gradient(160deg, #1a1a2a 0%, #3a3a5a 35%, #5a5a7a 65%, #3a3a5a 100%); }
-.cert-rank-2 .cert-ribbon-top-stripe,
-.cert-rank-2 .cert-ribbon-bottom { background: linear-gradient(90deg, #1a1a2a, #D0D0E8, #F0F0F8, #D0D0E8, #1a1a2a); }
-.cert-rank-2 .cert-border-outer { border-color: #A0A0B8; }
-.cert-rank-2 .cert-medal-circle { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--cream), 0 0 0 5px #A0A0B8; }
-.cert-rank-2 .cert-event-tag    { background: #2a2a42; }
-.cert-rank-2 .cert-score-display { border-color: #A0A0B8; }
-.cert-rank-2 .cert-score-label  { background: #2a2a42; color: #D0D0E8; }
-.cert-rank-2 .cert-score-value  { background: #F0F0F8; }
-.cert-rank-2 .cert-name-underline { background: linear-gradient(90deg, transparent, #A0A0B8, #D8D8F0, #A0A0B8, transparent); }
-.cert-rank-2 .cert-ornament-gem,
-.cert-rank-2 .cert-rank-label   { color: #9090B0; }
-.cert-rank-2 .cert-ornament-line { background: linear-gradient(90deg, transparent, #A0A0B8); }
-.cert-rank-2 .cert-ornament-line.r { background: linear-gradient(90deg, #A0A0B8, transparent); }
-.cert-rank-2 .cert-footer-divider { background: linear-gradient(90deg, transparent, #A0A0B8, transparent); }
-.cert-rank-2 .cert-sig-line { border-color: #A0A0B8; }
-
-.cert-rank-3 { --accent: #B06030; }
-.cert-rank-3 .cert-ribbon { background: linear-gradient(160deg, #2a1000 0%, #6b3000 35%, #9b5010 65%, #6b3000 100%); }
-.cert-rank-3 .cert-ribbon-top-stripe,
-.cert-rank-3 .cert-ribbon-bottom { background: linear-gradient(90deg, #2a1000, #D08040, #F0B070, #D08040, #2a1000); }
-.cert-rank-3 .cert-border-outer { border-color: #B06030; }
-.cert-rank-3 .cert-medal-circle { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--cream), 0 0 0 5px #B06030; }
-.cert-rank-3 .cert-event-tag    { background: #4a2000; }
-.cert-rank-3 .cert-score-display { border-color: #B06030; }
-.cert-rank-3 .cert-score-label  { background: #4a2000; color: #F0C090; }
-.cert-rank-3 .cert-score-value  { background: #FDF0E0; }
-.cert-rank-3 .cert-name-underline { background: linear-gradient(90deg, transparent, #B06030, #D08040, #B06030, transparent); }
-.cert-rank-3 .cert-ornament-gem,
-.cert-rank-3 .cert-rank-label   { color: #B06030; }
-.cert-rank-3 .cert-ornament-line { background: linear-gradient(90deg, transparent, #B06030); }
-.cert-rank-3 .cert-ornament-line.r { background: linear-gradient(90deg, #B06030, transparent); }
-.cert-rank-3 .cert-footer-divider { background: linear-gradient(90deg, transparent, #B06030, transparent); }
-.cert-rank-3 .cert-sig-line { border-color: #B06030; }
-
-.cert-rank-4 .cert-ribbon,
-.cert-rank-5 .cert-ribbon { background: linear-gradient(160deg, #061228 0%, var(--navy-mid) 50%, #061228 100%); }
-
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-@media print {
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { background: white !important; margin: 0; padding: 0; }
-  .app-header, .page-nav, .judge-bar, .class-tabs,
-  .action-bar, .leaderboard, .summary-panel,
-  .results-controls-bar, .pdf-bar, .toast,
-  .cert-filter-bar, #page-scoring,
-  .res-grade-tabs { display: none !important; }
-  #page-results.active { display: block !important; }
-  #page-cert.active    { display: block !important; }
-  .content { padding: 0 !important; }
-  .report-wrap {
-    box-shadow: none !important; border-radius: 0 !important;
-    padding: 8mm 10mm !important; max-width: 100% !important;
-    width: 100% !important; margin: 0 !important;
-  }
-  .rpt-table { width: 100% !important; font-size: 11px !important; table-layout: fixed; }
-  .rpt-table th { background: #1a3a6b !important; color: white !important; font-size: 10.5px !important; padding: 5px 4px !important; }
-  .rpt-table td { padding: 5px 4px !important; font-size: 11px !important; }
-  .rpt-table tr:nth-child(even) td { background: #f0f4ff !important; }
-  .rpt-table tr { page-break-inside: avoid; }
-  .cert-grid { display: block !important; }
-  .cert-grid > div { display: block !important; page-break-before: always; break-before: page; margin: 0 !important; padding: 0 !important; }
-  .cert-grid > div:first-child { page-break-before: auto; break-before: auto; }
-  .certificate { width: 100% !important; height: calc(297mm - 20mm) !important; min-height: unset !important; box-shadow: none !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
-  .cert-body { flex: 1 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; padding: 16px 48px 24px !important; }
-  @page { margin: 10mm; size: A4 portrait; }
-}
-
-@media (max-width: 600px) {
-  .score-table { min-width: 600px; }
-  .app-header h1 { font-size: 17px; }
-  .report-wrap { padding: 14px; }
-  .cert-grid { grid-template-columns: 1fr; }
-}
+/* ── PDF ── */
+.pdf-wrap{display:none;width:210mm;background:white!important;margin:0 auto;border:1px solid #ddd;}
+.page-frame{padding:7mm;box-sizing:border-box;}
+.doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1mm;}
+.hd-logo img{width:190px;height:auto;}
+.hd-nation-kh{text-align:center;font-family:'Moul',serif;font-size:14pt;line-height:1.6;}
+.hd-nation-en{text-align:center;font-family:'Playfair Display',serif;font-size:13pt;font-weight:700;line-height:1.5;color:#1e293b;}
+.rpt-tbl{width:100%;border-collapse:collapse;font-size:9.5pt;margin-top:8px;}
+.rpt-tbl th,.rpt-tbl td{border:1px solid black!important;padding:5px 6px;text-align:center;}
+.rpt-tbl th{background:#f1f5f9!important;font-weight:700;font-size:9pt;}
+.rpt-tbl td.name-col{text-align:left;padding-left:10px;}
+.stats{margin-top:14px;font-size:9pt;line-height:2;}
+.honor-grid{display:flex;flex-direction:column;align-items:center;gap:2mm;margin-top:2mm;}
+.honor-row{display:flex;justify-content:center;gap:8mm;}
+.rank-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto -14px;font-weight:800;font-size:13pt;color:white!important;position:relative;z-index:2;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.rank-badge.gold{background:var(--gold)!important;}
+.rank-badge.silver{background:#94a3b8!important;}
+.rank-badge.bronze{background:#d97706!important;}
+.rank-badge.plain{background:var(--red)!important;}
+.photo-box{width:46mm;height:38mm;border:3px solid white!important;overflow:hidden;}
+.photo-box img{width:100%;height:100%;object-fit:cover;}
+.name-tag{background:var(--navy)!important;color:white!important;padding:4px 3px;border-radius:8px;font-size:8.5pt;font-weight:700;margin-top:4px;display:block;}
+@media print{body{background:white;}.app-header,.ctrl-card,.btn-green,.tab-panel:not(.active){display:none!important;}.pdf-wrap{display:block!important;border:none;}}
 </style>
 </head>
 <body>
 
 <div class="app-header">
-  <h1>🏫 MIKIDS International School</h1>
-  <p>តារាងពិន្ទុប្រកួតអំណាន "ភាសាខ្មែរ" — វគ្គផ្តាច់ព្រ័ត្រ ឆ្នាំ ២០២៥–២០២៦</p>
-</div>
-
-<div class="page-nav">
-  <button class="active" id="nav-scoring" onclick="showPage('scoring',this)">📝 បញ្ចូលពិន្ទុ</button>
-  <button id="nav-results" onclick="showPage('results',this)">📊 តារាងលទ្ធផល</button>
-  <button id="nav-cert"    onclick="showPage('cert',this)">🏅 បត្រសរសើរ</button>
-</div>
-
-<div id="page-scoring" class="page active">
-  <div class="judge-bar">
-    <label>👤 ខ្ញុំជា:</label>
-    <select id="judgeSelect" onchange="switchJudge()">
-      <option value="1">គណៈកម្មការទី ១</option>
-      <option value="2">គណៈកម្មការទី ២</option>
-      <option value="3">គណៈកម្មការទី ៣</option>
-      <option value="4">គណៈកម្មការទី ៤</option>
-      <option value="5">គណៈកម្មការទី ៥</option>
-    </select>
-    <span id="liveIndicator" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#1a7a4a;background:#f0fff4;border:1px solid #9ae6b4;padding:4px 10px;border-radius:16px;">
-      <span id="liveDot" style="width:8px;height:8px;border-radius:50%;background:#38a169;animation:pulse 1.5s infinite"></span>
-      <span id="liveStatus">ចែករំលែក Real-time</span>
-    </span>
-    <span class="save-status">
-      <span class="save-dot" id="saveDot"></span>
-      <span id="saveStatus">រក្សា​ទុក​ស្វ័យ​ប្រវត្តិ</span>
-    </span>
-    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-save" onclick="saveAllScores()">💾 រក្សាទុក</button>
-      <button class="btn btn-export" onclick="exportCSV()">📥 Export CSV</button>
+  <div class="app-header-top">
+    <img class="app-logo" src="https://i.ibb.co/RTWkghgd/Logo-Mikid-removebg-preview.png" alt="MiKids">
+    <div>
+      <div class="app-title">MiKids International School</div>
+      <div class="app-subtitle">Student Score Management System · ប្រព័ន្ធគ្រប់គ្រងពិន្ទុសិស្ស</div>
     </div>
   </div>
-  <div class="class-tabs" id="classTabs"></div>
-  <div class="content">
-    <div class="summary-panel">
-      <h3>📊 សង្ខេបពិន្ទុ</h3>
-      <div class="summary-grid" id="summaryGrid"></div>
-    </div>
-    <div id="tableArea"></div>
-    <div class="leaderboard">
-      <h3>🏆 តារាងលំដាប់ពិន្ទុ (Top 10)</h3>
-      <div id="lbContent"></div>
-    </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('kh',this)">ថ្នាក់ភាសាខ្មែរ</button>
+    <button class="tab-btn" onclick="switchTab('en',this)">English Classes</button>
   </div>
 </div>
 
-<div id="page-results" class="page">
-  <div class="content">
-    <div class="results-controls-bar">
-      <span style="font-size:13px;color:#1a7a4a;background:#f0fff4;border:1px solid #9ae6b4;padding:5px 12px;border-radius:16px;display:flex;align-items:center;gap:6px">
-        <span style="width:8px;height:8px;border-radius:50%;background:#38a169;display:inline-block"></span>
-        ពិន្ទុ​ចែករំលែក​ដោយ​គណៈ​កម្ម​ការ​ទាំង​ ៥
-      </span>
-    </div>
-    <div class="res-grade-tabs" id="resGradeTabs"></div>
-    <div id="reportArea"></div>
-    <div class="pdf-bar">
-      <button class="btn btn-pdf" onclick="doPrint()">🖨️ Print / PDF</button>
-      <button class="btn" style="background:#1a7a4a" onclick="downloadResultsPDF()">⬇️ Download PDF</button>
-    </div>
+<!-- ══════════════════════════════ KH TAB ══════════════════════════════ -->
+<div id="tab-kh" class="tab-panel active">
+<div class="panel-body">
+<div class="ctrl-card">
+  <h2>ប្រព័ន្ធគ្រប់គ្រងពិន្ទុ — ថ្នាក់ភាសាខ្មែរ</h2>
+  <div class="mode-bar">
+    <span style="font-size:9pt;color:#64748b;">របៀប:</span>
+    <button class="mode-btn active" onclick="setKhMode('month',this)">📅 ប្រចាំខែ</button>
+    <button class="mode-btn" onclick="setKhMode('sem',this)">📊 ប្រចាំឆមាស</button>
+  </div>
+  <div class="grid3">
+    <div><label>ជ្រើសរើសថ្នាក់</label><select id="kh-classSelect" onchange="khOnClassChange()"></select></div>
+    <div><label id="kh-period-label">ប្រចាំខែ</label><input type="text" id="kh-monthInput" value="មករា"></div>
+    <div><label>ឆ្នាំសិក្សា</label><input type="text" id="kh-yearInput" value="២០២៥-២០២៦"></div>
+  </div>
+
+  <!-- ── KH MONTHLY ── -->
+  <div class="tbl-wrap" id="kh-wrap-month">
+  <table class="score-tbl">
+    <thead>
+      <tr>
+        <th rowspan="2" style="min-width:36px;">អត្ត​លេខ</th>
+        <th rowspan="2" style="min-width:128px;">ឈ្មោះ​សិស្ស</th>
+        <th rowspan="2" style="min-width:26px;">ភេទ</th>
+        <th colspan="4">ភាសាខ្មែរ</th>
+        <th rowspan="2" style="min-width:40px;">គណិតវិទ្យា</th>
+        <th rowspan="2" style="min-width:40px;">វិទ្យា​សាស្ត្រ</th>
+        <th colspan="4">សិក្សាសង្គម</th>
+        <th colspan="2">អប់រំ​កាយ</th>
+        <th rowspan="2" style="min-width:38px;">កុំព្យូទ័រ</th>
+        <th rowspan="2" style="min-width:38px;">អក្សរផ្ចង់</th>
+        <th rowspan="2" style="min-width:38px;">បំណិន​ជីវិត</th>
+        <th rowspan="2" style="min-width:38px;">ភាសា​ចិន</th>
+        <th rowspan="2" style="min-width:44px;background:var(--hw);color:white;font-size:6.5pt;padding:4px 2px;">កិច្ចការ​ផ្ទះ<br><span style="font-weight:400;">/១០</span></th>
+        <th rowspan="2" style="min-width:120px;">រូបថត</th>
+      </tr>
+      <tr>
+        <th style="font-size:6pt;min-width:38px;">ស្ដាប់-និយាយ</th>
+        <th style="font-size:6pt;min-width:38px;">សរសេរតាមអាន</th>
+        <th style="font-size:6pt;min-width:38px;">អំណាន</th>
+        <th style="font-size:6pt;min-width:38px;">តែង​សេចក្ដី</th>
+        <th style="font-size:6pt;min-width:38px;">ប្រវត្តិវិទ្យា</th>
+        <th style="font-size:6pt;min-width:38px;">ភូមិវិទ្យា</th>
+        <th style="font-size:6pt;min-width:38px;">សីលធម៍ពលរដ្ឋ</th>
+        <th style="font-size:6pt;min-width:38px;">គេហ-សិល្បៈ</th>
+        <th style="font-size:6pt;min-width:38px;">អប់រំកាយ</th>
+        <th style="font-size:6pt;min-width:38px;">សុខ​ភាព</th>
+      </tr>
+    </thead>
+    <tbody id="kh-monthBody"></tbody>
+  </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       KH SEMESTER TABLE
+       Cols: ID | Name | Sex
+             [15 exam subjects — h-sem1]
+             [កិច្ចការផ្ទះ — purple]
+             [មធ្យមភាគប្រឡងឆមាស AUTO — h-calc]   ← avg of 15 exam cols
+             [មធ្យមភាគប្រចាំខែ — h-sem2 INPUT]    ← teacher enters 1 value
+             [មធ្យមភាគប្រចាំឆមាស AUTO — h-calc]   ← (examAvg + monthAvg)/2
+             [ចំណាត់ថ្នាក់ AUTO — amber]
+             [Photo — h-dark]
+  ══════════════════════════════════════════════════════════════════ -->
+  <div class="tbl-wrap" id="kh-wrap-sem" style="display:none;">
+  <table class="score-tbl">
+    <thead>
+      <tr>
+        <th rowspan="2" style="min-width:36px;">អត្ត​លេខ</th>
+        <th rowspan="2" style="min-width:128px;">ឈ្មោះ​សិស្ស</th>
+        <th rowspan="2" style="min-width:26px;">ភេទ</th>
+        <th class="h-sem1" colspan="15">លទ្ធផលប្រឡងប្រចាំឆមាស</th>
+        <th class="h-calc" rowspan="2" style="min-width:52px;font-size:6.5pt;line-height:1.4;">មធ្យមភាគ<br>ប្រឡងឆមាស<br><span style="opacity:.8;font-size:5.5pt;">[Auto]</span></th>
+        <th class="h-sem2" rowspan="2" style="min-width:52px;font-size:6.5pt;line-height:1.4;">មធ្យមភាគ<br>ប្រចាំខែ<br><span style="opacity:.8;font-size:5.5pt;">(បញ្ចូល)</span></th>
+        <th class="h-calc" rowspan="2" style="min-width:52px;font-size:6.5pt;line-height:1.4;">មធ្យមភាគ<br>ប្រចាំឆមាស<br><span style="opacity:.8;font-size:5.5pt;">[Auto]</span></th>
+        <th rowspan="2" style="min-width:38px;background:#c2410c;color:white;font-size:6.5pt;padding:4px 2px;border:1px solid rgba(255,255,255,.15);">ចំណាត់​ថ្នាក់<br><span style="opacity:.8;font-size:5.5pt;">[Auto]</span></th>
+        <th class="h-dark" rowspan="2" style="min-width:120px;">រូបថត</th>
+      </tr>
+      <tr>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">អំណាន</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">ស្ដាប់-និយាយ</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">សរសេរតាមអាន</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">តែងសេចក្ដី</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">អក្សរផ្ចង់</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">គណិតវិទ្យា</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">វិទ្យាសាស្ត្រ</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">ប្រវត្តិវិទ្យា</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">ភូមិវិទ្យា</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">សីលធម៍-ពលរដ្ឋ</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">គេហ-សិល្បៈ</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">អប់រំកាយ-សុខភាព</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">បំណិនជីវិត</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">ភាសា​ចិន</th>
+        <th class="h-sem1" style="font-size:6pt;min-width:38px;">កុំព្យូទ័រ</th>
+      </tr>
+    </thead>
+    <tbody id="kh-semBody"></tbody>
+  </table>
+  </div>
+
+  <div style="text-align:center;margin-top:20px;">
+    <button class="btn btn-navy btn-moul" onclick="khGenerate('REPORT')">📋 បង្កើតតារាងចំណាត់ថ្នាក់</button>
+    <button class="btn btn-red btn-moul" onclick="khGenerate('HONOR')">🏆 បង្កើតតារាងកិត្តិយស</button>
+    <button class="btn" style="background:#64748b;color:white;" onclick="clearAllData()">🗑️ លុបទិន្នន័យទាំងអស់</button>
   </div>
 </div>
+<div id="kh-pdf-content" class="pdf-wrap"></div>
+<div style="text-align:center;">
+  <button id="kh-downloadBtn" class="btn btn-green" onclick="khDownloadPDF()">📥 ទាញយក PDF</button>
+</div>
+</div>
+</div>
 
-<div id="page-cert" class="page">
-  <div class="content">
-    <div class="cert-filter-bar">
-      <label>📋 ថ្នាក់:</label>
-      <select id="cGrade" class="ctrl-select" onchange="renderCerts()">
-        <option value="all">ថ្នាក់ទាំងអស់</option>
-        <option value="ថ្នាក់ទី១">ថ្នាក់ទី១</option>
-        <option value="ថ្នាក់ទី២">ថ្នាក់ទី២</option>
-        <option value="ថ្នាក់ទី៣">ថ្នាក់ទី៣</option>
-        <option value="ថ្នាក់ទី៤">ថ្នាក់ទី៤</option>
-        <option value="ថ្នាក់ទី៥">ថ្នាក់ទី៥</option>
+<!-- ══════════════════════════════ EN TAB ══════════════════════════════ -->
+<div id="tab-en" class="tab-panel">
+<div class="panel-body">
+<div class="ctrl-card">
+  <h2 style="font-family:'Playfair Display',serif;">English Classes — Score Management</h2>
+  <div class="mode-bar">
+    <span style="font-size:9pt;color:#64748b;">Mode:</span>
+    <button class="mode-btn active" onclick="setEnMode('month',this)">📅 Monthly</button>
+    <button class="mode-btn" onclick="setEnMode('sem',this)">📊 Semester</button>
+  </div>
+  <div class="grid3">
+    <div><label>Select Class</label>
+      <select id="en-classSelect" onchange="enOnClassChange()">
+        <option value="">-- Choose a Class --</option>
+        <option>Fount1 Morning</option><option>Fount1 Evening</option>
+        <option>Fount2 Morning</option><option>Fount2 Afternoon</option>
+        <option>Nursery Morning</option><option>Nursery Afternoon</option>
+        <option>Level1 Morning</option><option>Level1 Afternoon</option>
+        <option>Level 2</option>
       </select>
-      <label style="color:#666;font-size:13px">🏅 Top 1–5 តែប៉ុណ្ណោះ</label>
     </div>
-    <div id="certArea"></div>
-    <div class="pdf-bar">
-      <button class="btn btn-pdf" onclick="doPrint()">🖨️ Print បត្រសរសើរ</button>
-      <button class="btn" style="background:#1a7a4a" onclick="downloadCertPDF()">⬇️ Download PDF</button>
-    </div>
+    <div><label id="en-period-label">Month</label><input type="text" id="en-monthInput" value="January"></div>
+    <div><label>Academic Year</label><input type="text" id="en-yearInput" value="2025-2026"></div>
+  </div>
+
+  <!-- ── EN MONTHLY ── -->
+  <div class="tbl-wrap" id="en-wrap-month">
+  <table class="score-tbl">
+    <thead>
+      <tr>
+        <th style="min-width:34px;">ID</th>
+        <th style="min-width:138px;">Student Name</th>
+        <th style="min-width:30px;">Sex</th>
+        <th style="min-width:44px;font-size:7pt;">Mix-Skill</th>
+        <th style="min-width:42px;font-size:7pt;">Homework</th>
+        <th style="min-width:42px;font-size:7pt;">Quiz</th>
+        <th style="min-width:42px;font-size:7pt;">Assignment</th>
+        <th style="min-width:42px;font-size:7pt;">Speaking</th>
+        <th style="min-width:42px;font-size:7pt;">Listening</th>
+        <th style="min-width:42px;font-size:7pt;">Arts</th>
+        <th style="min-width:42px;font-size:7pt;">Chinese</th>
+        <th style="min-width:42px;font-size:7pt;">Life-Skills</th>
+        <th style="min-width:42px;font-size:7pt;">Attendance</th>
+        <th style="min-width:120px;">Photo</th>
+      </tr>
+    </thead>
+    <tbody id="en-monthBody"></tbody>
+  </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       EN SEMESTER TABLE
+       Cols: ID | Name | Sex
+             Month 1 score (input)
+             Month 2 score (input)
+             Month 3 score (input)
+             Average [AUTO] — green
+             Grade   [AUTO] — colored
+             Rank    [AUTO] — amber
+             Photo
+  ══════════════════════════════════════════════════════════════════ -->
+  <div class="tbl-wrap" id="en-wrap-sem" style="display:none;">
+  <table class="score-tbl">
+    <thead>
+      <tr>
+        <th class="h-sem1" style="min-width:34px;">ID</th>
+        <th class="h-sem1" style="min-width:138px;">Student Name</th>
+        <th class="h-sem1" style="min-width:30px;">Sex</th>
+        <th class="h-sem1" style="min-width:60px;font-size:7.5pt;">Month 1<br><span style="font-weight:400;font-size:6.5pt;">/10</span></th>
+        <th class="h-sem2" style="min-width:60px;font-size:7.5pt;">Month 2<br><span style="font-weight:400;font-size:6.5pt;">/10</span></th>
+        <th class="h-dark" style="min-width:60px;font-size:7.5pt;">Month 3<br><span style="font-weight:400;font-size:6.5pt;">/10</span></th>
+        <th class="h-calc" style="min-width:58px;font-size:7.5pt;">Average<br><span style="font-weight:400;font-size:6pt;">[Auto]</span></th>
+        <th class="h-calc" style="min-width:90px;font-size:7.5pt;">Grade<br><span style="font-weight:400;font-size:6pt;">[Auto]</span></th>
+        <th style="min-width:36px;background:#c2410c;color:white;font-size:6.5pt;padding:4px 2px;">Rank<br><span style="opacity:.8;font-size:5.5pt;">[Auto]</span></th>
+        <th class="h-dark" style="min-width:120px;">Photo</th>
+      </tr>
+    </thead>
+    <tbody id="en-semBody"></tbody>
+  </table>
+  </div>
+
+  <div style="text-align:center;margin-top:20px;">
+    <button class="btn btn-navy" onclick="enGenerate('REPORT')">📋 Generate Rankings Report</button>
+    <button class="btn btn-red" onclick="enGenerate('HONOR')">🏆 Generate Honor Board</button>
   </div>
 </div>
-
-<div class="toast" id="toast"></div>
+<div id="en-pdf-content" class="pdf-wrap"></div>
+<div style="text-align:center;">
+  <button id="en-downloadBtn" class="btn btn-green" onclick="enDownloadPDF()">📥 Download PDF</button>
+</div>
+</div>
+</div>
 
 <script>
-// ================================================================
-// ⚙️  FIREBASE CONFIG — ដាក់ URL របស់អ្នកនៅទីនេះ
-// ================================================================
-const FIREBASE_URL = 'https://mikids-scores-default-rtdb.firebaseio.com';
-// ឧទាហរណ៍: 'https://mikids-scores-default-rtdb.firebaseio.com'
-// ================================================================
-
-const DB_PATH = '/mikids-scores-v2.json';
-
-async function fbGet() {
-  try {
-    const r = await fetch(FIREBASE_URL + DB_PATH, { method: 'GET', mode: 'cors', headers: { 'Accept': 'application/json' } });
-    if (!r.ok) return null;
-    const data = await r.json();
-    return data || {};
-  } catch(e) { return null; }
+// ════════════════════════════════════════════
+// GRADE HELPERS
+// ════════════════════════════════════════════
+function khGrade(avg){
+  if(avg>=9.5)return{text:'ល្អណាស់',color:'#7c3aed'};
+  if(avg>=8)  return{text:'ល្អ',color:'#15803d'};
+  if(avg>=6.5)return{text:'ល្អបង្គួរ',color:'#2563eb'};
+  if(avg>=5)  return{text:'មធ្យម',color:'#d97706'};
+  return           {text:'ខ្សោយ',color:'#be123c'};
+}
+function enGrade(avg){
+  if(avg>=9.5)return{text:'A+ — Outstanding',color:'#7c3aed'};
+  if(avg>=8)  return{text:'A — Excellent',color:'#15803d'};
+  if(avg>=6.5)return{text:'B — Good',color:'#2563eb'};
+  if(avg>=5)  return{text:'C — Average',color:'#d97706'};
+  return           {text:'F — Fail',color:'#be123c'};
 }
 
-async function fbSet(data) {
-  try {
-    const r = await fetch(FIREBASE_URL + DB_PATH, {
-      method: 'PUT', mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+function calcAvg(row){
+  const vals=Array.from(row.querySelectorAll('.sc'))
+    .filter(x=>x.value.trim()!=='').map(x=>parseFloat(x.value)).filter(v=>!isNaN(v));
+  if(!vals.length)return{total:0,avg:0};
+  const total=vals.reduce((a,b)=>a+b,0);
+  return{total,avg:total/vals.length};
+}
+
+// ════════════════════════════════════════════
+// KH SEMESTER AUTO-CALC
+// Called on every input change in a sem row
+// ════════════════════════════════════════════
+function updateKhSemRow(row,allRows){
+  // 1) exam avg = average of 15 .kh-ex inputs that have values
+  const exVals=Array.from(row.querySelectorAll('.kh-ex'))
+    .map(x=>x.value.trim()).filter(v=>v!=='').map(Number).filter(v=>!isNaN(v));
+  const examAvg = exVals.length ? exVals.reduce((a,b)=>a+b,0)/exVals.length : null;
+
+  // 2) monthly avg = single input from teacher
+  const mnEl=row.querySelector('.kh-mn');
+  const mnVal = mnEl&&mnEl.value.trim()!=='' ? parseFloat(mnEl.value) : null;
+
+  // 3) semester avg
+  let semAvg=null;
+  if(examAvg!==null && mnVal!==null) semAvg=(examAvg+mnVal)/2;
+  else if(examAvg!==null) semAvg=examAvg;
+  else if(mnVal!==null)   semAvg=mnVal;
+
+  row.querySelector('.kh-exam-avg').textContent = examAvg!==null ? examAvg.toFixed(2) : '—';
+  row.querySelector('.kh-sem-avg').textContent  = semAvg!==null  ? semAvg.toFixed(2)  : '—';
+  row._semAvg = semAvg!==null ? semAvg : 0;
+
+  // rank is updated after all rows
+  if(allRows) updateKhRanks(allRows);
+}
+
+function updateKhRanks(rows){
+  const arr=Array.from(rows).map(r=>({row:r,avg:r._semAvg||0}));
+  arr.sort((a,b)=>b.avg-a.avg);
+  arr.forEach((item,i)=>{
+    const cell=item.row.querySelector('.kh-rank');
+    if(cell) cell.textContent = item.avg>0 ? (i+1) : '—';
+  });
+}
+
+// ════════════════════════════════════════════
+// EN SEMESTER AUTO-CALC
+// ════════════════════════════════════════════
+function updateEnSemRow(row,allRows){
+  const s1=row.querySelector('.en-s1');
+  const s2=row.querySelector('.en-s2');
+  const s3=row.querySelector('.en-s3');
+  const vals=[s1,s2,s3].filter(x=>x&&x.value.trim()!=='').map(x=>parseFloat(x.value)).filter(v=>!isNaN(v));
+  const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+
+  const avgCell  = row.querySelector('.en-avg');
+  const gradeCell= row.querySelector('.en-grade');
+  avgCell.textContent = avg!==null ? avg.toFixed(2) : '—';
+  if(avg!==null){
+    const g=enGrade(avg);
+    gradeCell.textContent=g.text;
+    gradeCell.style.color=g.color;
+  } else {
+    gradeCell.textContent='—';
+    gradeCell.style.color='#94a3b8';
+  }
+  row._avg = avg!==null ? avg : 0;
+  if(allRows) updateEnRanks(allRows);
+}
+
+function updateEnRanks(rows){
+  const arr=Array.from(rows).map(r=>({row:r,avg:r._avg||0}));
+  arr.sort((a,b)=>b.avg-a.avg);
+  arr.forEach((item,i)=>{
+    const cell=item.row.querySelector('.en-rank');
+    if(cell) cell.textContent = item.avg>0 ? (i+1) : '—';
+  });
+}
+
+// ════════════════════════════════════════════
+// LOCAL STORAGE
+// ════════════════════════════════════════════
+function lsKey(tab,mode,cls){return 'mikids_'+tab+'_'+mode+'_'+cls;}
+
+function saveData(tab,mode,cls){
+  const sel=tab==='kh'?(mode==='month'?'.kh-row':'.kh-sem-row'):(mode==='month'?'.en-row':'.en-sem-row');
+  const data=Array.from(document.querySelectorAll(sel)).map(r=>({
+    scores:Array.from(r.querySelectorAll('.sc')).map(x=>x.value),
+    name:r.querySelector('.in-name')?.value||''
+  }));
+  const meta={
+    month:document.getElementById(tab==='kh'?'kh-monthInput':'en-monthInput')?.value||'',
+    year :document.getElementById(tab==='kh'?'kh-yearInput' :'en-yearInput') ?.value||''
+  };
+  try{localStorage.setItem(lsKey(tab,mode,cls),JSON.stringify({data,meta}));}catch(e){}
+}
+
+function loadData(tab,mode,cls){
+  let saved;
+  try{saved=JSON.parse(localStorage.getItem(lsKey(tab,mode,cls)));}catch(e){}
+  if(!saved)return;
+  if(saved.meta){
+    const mEl=document.getElementById(tab==='kh'?'kh-monthInput':'en-monthInput');
+    const yEl=document.getElementById(tab==='kh'?'kh-yearInput':'en-yearInput');
+    if(mEl&&saved.meta.month)mEl.value=saved.meta.month;
+    if(yEl&&saved.meta.year) yEl.value=saved.meta.year;
+  }
+  const sel=tab==='kh'?(mode==='month'?'.kh-row':'.kh-sem-row'):(mode==='month'?'.en-row':'.en-sem-row');
+  document.querySelectorAll(sel).forEach((r,i)=>{
+    if(!saved.data[i])return;
+    Array.from(r.querySelectorAll('.sc')).forEach((inp,j)=>{
+      if(saved.data[i].scores?.[j]!==undefined)inp.value=saved.data[i].scores[j];
     });
-    return r.ok;
-  } catch(e) { return false; }
-}
-
-async function loadSharedScores() {
-  // Try Firebase first
-  const remote = await fbGet();
-  if (remote && Object.keys(remote).length > 0) {
-    // Cache locally
-    try { localStorage.setItem('mikids-fb-cache', JSON.stringify(remote)); } catch(e) {}
-    return remote;
+    const nEl=r.querySelector('.in-name');
+    if(nEl&&saved.data[i].name)nEl.value=saved.data[i].name;
+  });
+  // recalc after load
+  if(tab==='kh'&&mode==='sem'){
+    const rows=document.querySelectorAll('.kh-sem-row');
+    rows.forEach(r=>updateKhSemRow(r,null));
+    updateKhRanks(rows);
   }
-  // Fallback: localStorage cache (offline mode)
-  try {
-    const v = localStorage.getItem('mikids-fb-cache');
-    if (v) return JSON.parse(v);
-  } catch(e) {}
-  return {};
-}
-
-async function persistScores() {
-  const d = JSON.stringify(scores);
-  if (d === lastSavedHash) return;
-  lastSavedHash = d;
-  // Save to Firebase (real-time sync across all devices)
-  const ok = await fbSet(scores);
-  // Also cache locally
-  try { localStorage.setItem('mikids-fb-cache', d); } catch(e) {}
-  return ok;
-}
-
-// ================================================================
-// DATA
-// ================================================================
-const allStudents = [
-  {no:1,  name:'ងួន បញ្ញាពុទ្ធិស័ក្តិ', sex:'ប', grade:'ថ្នាក់ទី១', code:'01.01', disp:'០១.១'},
-  {no:2,  name:'ឆន វិរៈសិទ្ធ',           sex:'ប', grade:'ថ្នាក់ទី១', code:'01.02', disp:'០១.២'},
-  {no:3,  name:'ភឺន ថិរាយុ',              sex:'ប', grade:'ថ្នាក់ទី១', code:'01.03', disp:'០១.៣'},
-  {no:4,  name:'សុបញ្ញា សោម៉ា',           sex:'ស', grade:'ថ្នាក់ទី១', code:'01.04', disp:'០១.៤'},
-  {no:5,  name:'អ៊ឹម រោចនា',              sex:'ស', grade:'ថ្នាក់ទី១', code:'01.05', disp:'០១.៥'},
-  {no:6,  name:'ចាវ វិនហាវ',              sex:'ប', grade:'ថ្នាក់ទី១', code:'01.06', disp:'០១.៦'},
-  {no:7,  name:'ដន សុភ័ណ្ឌម៉ូនីកា',       sex:'ស', grade:'ថ្នាក់ទី១', code:'01.07', disp:'០១.៧'},
-  {no:8,  name:'ប៊ូ សាធុការ',              sex:'ស', grade:'ថ្នាក់ទី១', code:'01.08', disp:'០១.៨'},
-  {no:9,  name:'សេន យ៉ាស្មីនណា',          sex:'ស', grade:'ថ្នាក់ទី១', code:'01.09', disp:'០១.៩'},
-  {no:10, name:'ស៊្រាង សៀវហ្វុង',          sex:'ប', grade:'ថ្នាក់ទី១', code:'01.10', disp:'០១.១០'},
-  {no:11, name:'ហេង ម៉ីអ៊ិ',              sex:'ស', grade:'ថ្នាក់ទី១', code:'01.11', disp:'០១.១១'},
-  {no:12, name:'ចន្ថា លីតា',              sex:'ស', grade:'ថ្នាក់ទី២', code:'02.01', disp:'០២.១'},
-  {no:13, name:'ពៅ សុខចិន',               sex:'ប', grade:'ថ្នាក់ទី២', code:'02.02', disp:'០២.២'},
-  {no:14, name:'ណារ៉ា ហេងលី',             sex:'ប', grade:'ថ្នាក់ទី២', code:'02.03', disp:'០២.៣'},
-  {no:15, name:'ប៉ុន រីយ៉ា',               sex:'ស', grade:'ថ្នាក់ទី២', code:'02.04', disp:'០២.៤'},
-  {no:16, name:'សុខ ដាលីស',               sex:'ស', grade:'ថ្នាក់ទី២', code:'02.05', disp:'០២.៥'},
-  {no:17, name:'សុខ សម្បត្តិ',             sex:'ប', grade:'ថ្នាក់ទី២', code:'02.06', disp:'០២.៦'},
-  {no:18, name:'ស្រស់ រីហ្សា',             sex:'ស', grade:'ថ្នាក់ទី២', code:'02.07', disp:'០២.៧'},
-  {no:19, name:'ចន្ទ សុផាយ៉ាមេឃ',          sex:'ប', grade:'ថ្នាក់ទី២', code:'02.08', disp:'០២.៨'},
-  {no:20, name:'មិត្ត ម៉េងហួរ',             sex:'ប', grade:'ថ្នាក់ទី២', code:'02.09', disp:'០២.៩'},
-  {no:21, name:'យស់ នរិន្ទ',               sex:'ប', grade:'ថ្នាក់ទី២', code:'02.10', disp:'០២.១០'},
-  {no:22, name:'សូយ បញ្ញា',               sex:'ប', grade:'ថ្នាក់ទី២', code:'02.11', disp:'០២.១១'},
-  {no:23, name:'សេង សាណា',                sex:'ស', grade:'ថ្នាក់ទី២', code:'02.12', disp:'០២.១២'},
-  {no:24, name:'ស៊នវីរៈ បញ្ញាទេពី',         sex:'ស', grade:'ថ្នាក់ទី២', code:'02.13', disp:'០២.១៣'},
-  {no:25, name:'វង់ ពុទ្ធិតា',              sex:'ស', grade:'ថ្នាក់ទី២', code:'02.14', disp:'០២.១៤'},
-  {no:26, name:'វន្តវិន ថាណា',              sex:'ស', grade:'ថ្នាក់ទី២', code:'02.15', disp:'០២.១៥'},
-  {no:27, name:'ហាន ស៊ីវហ័រ',              sex:'ស', grade:'ថ្នាក់ទី២', code:'02.16', disp:'០២.១៦'},
-  {no:28, name:'អ៊ឹង បញ្ញារ័ត្ន',            sex:'ប', grade:'ថ្នាក់ទី២', code:'02.17', disp:'០២.១៧'},
-  {no:29, name:'ឡាយ មុនិចិន្ដា',            sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.01', disp:'០៣.១'},
-  {no:30, name:'ឈុនតា រតនៈខុនដូ',           sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.02', disp:'០៣.២'},
-  {no:31, name:'លីម ពុទ្ធិរាជ',             sex:'ប', grade:'ថ្នាក់ទី៣', code:'03.03', disp:'០៣.៣'},
-  {no:32, name:'យ៉ា ពេជ្រម៉ូនីកា',           sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.04', disp:'០៣.៤'},
-  {no:33, name:'អោក និស្សិត',               sex:'ប', grade:'ថ្នាក់ទី៣', code:'03.05', disp:'០៣.៥'},
-  {no:34, name:'ឡ ស៊ីវហ៊ួយ',               sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.06', disp:'០៣.៦'},
-  {no:35, name:'ចំរើន ម៉ានីតា',             sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.07', disp:'០៣.៧'},
-  {no:36, name:'កែវ វីនសុឧត្តតារា',          sex:'ស', grade:'ថ្នាក់ទី៣', code:'03.08', disp:'០៣.៨'},
-  {no:37, name:'ឡាយ ភារ៉ាដាវីឌ',            sex:'ប', grade:'ថ្នាក់ទី៤', code:'04.01', disp:'០៤.១'},
-  {no:38, name:'វង្ស មុនីកញ្ចនា',            sex:'ស', grade:'ថ្នាក់ទី៤', code:'04.05', disp:'០៤.៥'},
-  {no:39, name:'ពៅ សុនីតា',                sex:'ស', grade:'ថ្នាក់ទី៥', code:'05.01', disp:'០៥.១'},
-  {no:40, name:'ឡ សុវណ្ណហាន់ណា',            sex:'ស', grade:'ថ្នាក់ទី៥', code:'05.02', disp:'០៥.២'},
-];
-
-const CRITERIA = [
-  {key:'c1', label:'ការណ្ណែន<br>ខំ',           max:1,   sub:'(1ពិន្ទុ)'},
-  {key:'c2', label:'អានមិនខុស/<br>មិនរំលង',    max:3,   sub:'(3ពិន្ទុ)'},
-  {key:'c3', label:'ការដាក់<br>សំឡេង/សំនៀង',   max:2.5, sub:'(2.5ពិន្ទុ)'},
-  {key:'c4', label:'អានលឿន/<br>គោរពឃ្លា',      max:2,   sub:'(2ពិន្ទុ)'},
-  {key:'c5', label:'យល់អត្ថបទ/<br>ឆ្លើយសំណួរ', max:1.5, sub:'(1.5ពិន្ទុ)'},
-];
-
-const GRADE_LIST = ['ថ្នាក់ទី១','ថ្នាក់ទី២','ថ្នាក់ទី៣','ថ្នាក់ទី៤','ថ្នាក់ទី៥'];
-const KH_MONTHS  = ['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា','កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ'];
-
-let currentGrade = 'ទាំងអស់';
-let currentJudge = '1';
-let currentResGrade = 'all';
-let scores = {};
-let lastSavedHash = '';
-let pollTimer = null;
-
-window.onload = async () => {
-  try { currentJudge = localStorage.getItem('mikids-my-judge') || '1'; } catch(e) {}
-  document.getElementById('judgeSelect').value = currentJudge;
-
-  if (FIREBASE_URL === 'YOUR_FIREBASE_URL_HERE') {
-    showToast('⚠️ សូមដាក់ Firebase URL ក្នុង code!');
-    document.getElementById('liveStatus').textContent = '⚠️ Firebase URL មិនទាន់ដាក់';
-    document.getElementById('liveDot').style.background = '#e53e3e';
+  if(tab==='en'&&mode==='sem'){
+    const rows=document.querySelectorAll('.en-sem-row');
+    rows.forEach(r=>updateEnSemRow(r,null));
+    updateEnRanks(rows);
   }
+}
 
-  buildTabs();
-  buildResGradeTabs();
-  scores = await loadSharedScores() || {};
-  lastSavedHash = JSON.stringify(scores);
-  renderTable();
-  updateSummary();
-  updateLeaderboard();
+function attachAutoSave(tab,mode,cls){
+  const sel=tab==='kh'?(mode==='month'?'.kh-row':'.kh-sem-row'):(mode==='month'?'.en-row':'.en-sem-row');
+  const allRows=document.querySelectorAll(sel);
+  allRows.forEach(r=>{
+    r.querySelectorAll('.sc,.in-name').forEach(inp=>{
+      inp.addEventListener('input',()=>{
+        saveData(tab,mode,cls);
+        if(tab==='kh'&&mode==='sem') updateKhSemRow(r,allRows);
+        if(tab==='en'&&mode==='sem') updateEnSemRow(r,allRows);
+      });
+    });
+  });
+  ['kh-monthInput','kh-yearInput','en-monthInput','en-yearInput'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input',()=>saveData(tab,mode,cls));
+  });
+}
 
-  startPolling();
+function clearAllData(){
+  if(!confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យទាំងអស់មែនទេ?'))return;
+  Object.keys(localStorage).filter(k=>k.startsWith('mikids_')).forEach(k=>localStorage.removeItem(k));
+  alert('បានលុបទិន្នន័យទាំងអស់រួចហើយ!');
+  location.reload();
+}
+
+// ════════════════════════════════════════════
+// STUDENT DATA
+// ════════════════════════════════════════════
+const khStudentDB={
+  'ថ្នាក់មត្តេយ្យកម្រិតមធ្យម(ព្រឹក)':[
+    {id:'64',name:'ឃុន ទេពង្ស',sex:'M'},{id:'121',name:'នឿន វឌ្ឍនា',sex:'M'},
+    {id:'128',name:'ពិសិទ្អ ច័ន្ទវឌ្ឃ',sex:'M'},{id:'141',name:'ហេង សាជីង',sex:'F'},
+    {id:'132',name:'សុ បញ្ញា មុនិរាជ',sex:'M'},{id:'67',name:'ឈឿន ប៊ុនធឿនពុទ្ធិ',sex:'M'},
+    {id:'173',name:'សាន្ត លីប៉េង',sex:'M'},{id:'163',name:'អេង លីឆេង',sex:'M'},
+    {id:'179',name:'ចន្ថា វឌ្ឍនា',sex:'M'},{id:'162',name:'យ៉ាន់ សុខឡេង',sex:'M'}
+  ],
+  'ថ្នាក់មត្តេយ្យកម្រិតមធ្យម(រសៀល)':[
+    {id:'139',name:'ហ៊ឺម ម៉ីអ៊ិ',sex:'M'},{id:'146',name:'លន វេស្សភូ',sex:'M'},
+    {id:'102',name:'សំណាង វីរៈបុត្រ',sex:'M'},{id:'67',name:'ឈឿន ប៊ុនធឿនពុទ្ធិ',sex:'M'},
+    {id:'87',name:'អ៊ុំ រតនាសិទ្ធីការ',sex:'F'},{id:'113',name:'ស៊ីម សិទ្ធីការ',sex:'F'},
+    {id:'164',name:'អ៊ូសុវណ្ណ វេហា',sex:'M'},{id:'177',name:'តាំង ហ៊ួយលីន',sex:'F'},
+    {id:'165',name:'លឹម លីម៉េងគ័ង្គ',sex:'M'}
+  ],
+  'ថ្នាក់មត្តេយ្យកម្រិតខ្ពស់(ព្រឹក)':[
+    {id:'29',name:'ខាន់ មុនីវល្លភា',sex:'F'},{id:'101',name:'ឈុំ វីរ់សិទ្ធ',sex:'M'},
+    {id:'65',name:'និត សុធារ៉ា',sex:'M'},{id:'78',name:'នី លីជីង',sex:'F'},
+    {id:'117',name:'ហ៊ុន រាណ្ណជេណស្ដា',sex:'M'},{id:'47',name:'បុណ្ណជេ ជេននី',sex:'F'},
+    {id:'14',name:'ឃុន ទេពី',sex:'F'},{id:'62',name:'រិទ្ធី ពិស្សុតសុក្រឹត',sex:'M'},
+    {id:'49',name:'ងិន ទៀនវិន',sex:'M'},{id:'107',name:'សុភក្រ័ វរៈសិទ្ធ',sex:'M'},
+    {id:'170',name:'អុលវឿន ដាវីន',sex:'F'},{id:'137',name:'សឿន ចាន់សុមេធា',sex:'F'},
+    {id:'1',name:'ប៊ុនរីន ខេមរា',sex:'M'}
+  ],
+  'ថ្នាក់មត្តេយ្យកម្រិតខ្ពស់(រសៀល)':[
+    {id:'54',name:'យន់ លីហេង',sex:'M'},{id:'75',name:'វិន បញ្ញាវ័ន្ត',sex:'M'},
+    {id:'90',name:'សូ រស្មីពនិតា',sex:'F'},{id:'50',name:'សូយ រក្សា',sex:'M'},
+    {id:'72',name:'អ៊ូ សុខអាមី',sex:'F'},{id:'137',name:'សឿន ចាន់សុមេធា',sex:'F'},
+    {id:'176',name:'ប៉ឹម ម៉ីជូ',sex:'F'},{id:'85',name:'សេរី ចន្ទវឌ្ឍនា',sex:'M'},
+    {id:'161',name:'លីម ហ៊ីប៉',sex:'M'},{id:'55',name:'អ៊ា ជីងហ័រ',sex:'F'},
+    {id:'79',name:'មិត្ត ម៉េងហេង',sex:'M'},{id:'74',name:'ចាន់នី ស៊ូសាន់ណា',sex:'F'}
+  ],
+  'ថ្នាក់ទី១(ព្រឹក)':[
+    {id:'75',name:'ឆន វិរៈសិទ្ធ',sex:'M'},{id:'47',name:'ជាឡិច កូលីន',sex:'M'},
+    {id:'92',name:'សុបញ្ញា សោម៉ា',sex:'F'},{id:'83',name:'ភឺន ថិរាយុ',sex:'M'},
+    {id:'69',name:'លី ឆាយឈ័ន',sex:'M'},{id:'77',name:'វុឌ្ឍី ដាវីកា',sex:'F'},
+    {id:'93',name:'អ៊ឹម រោចនា',sex:'F'},{id:'72',name:'វង្ស ដារ៉ាវីន',sex:'M'},
+    {id:'95',name:'ចាវ វិនហាវ',sex:'M'},{id:'80',name:'ងួន បញ្ញាពុទ្ធិស័ក្តិ',sex:'M'}
+  ],
+  'ថ្នាក់ទី១(រសៀល)':[
+    {id:'88',name:'ចំរើន ចន្ទឧត្តម',sex:'M'},{id:'91',name:'ប៊ូ សាធុការ',sex:'F'},
+    {id:'82',name:'សេន យ៉ាស្មីនណា',sex:'F'},{id:'85',name:'ដន សុភ័ណ្ឌម៉ូនីកា',sex:'F'},
+    {id:'78',name:'ស៊្រាង សៀវហ្វុង',sex:'F'},{id:'73',name:'ហេង ម៉ីអ៊ិ',sex:'F'},
+    {id:'74',name:'អឿន ពៅវល័ក្ខ',sex:'F'},{id:'70',name:'រ័ត្ន រ៉ាថេប',sex:'M'}
+  ],
+  'ថ្នាក់ទី២(ព្រឹក)':[
+    {id:'21',name:'ចន្ថា លីតា',sex:'F'},{id:'20',name:'ពៅ សុខចិន',sex:'M'},
+    {id:'17',name:'ណារ៉ា ហេងលី',sex:'M'},{id:'23',name:'សុខ សម្បត្តិ',sex:'M'},
+    {id:'22',name:'សុខ ដាលីស',sex:'F'},{id:'29',name:'ស្រស់ រីហ្សា',sex:'F'},
+    {id:'41',name:'ប៉ុន រីយ៉ា',sex:'F'}
+  ],
+  'ថ្នាក់ទី២(រសៀល)':[
+    {id:'59',name:'អុង បញ្ញារ័ត្ន',sex:'M'},{id:'31',name:'មិត្ត ម៉េងហួរ',sex:'M'},
+    {id:'14',name:'យស់ នរិន្ទ',sex:'M'},{id:'33',name:'វង់ ពុទ្ធិតា',sex:'F'},
+    {id:'62',name:'សូយ បញ្ញា',sex:'M'},{id:'40',name:'សេង សាណា',sex:'F'},
+    {id:'39',name:'ចន្ទ សុផាយ៉ាមេឃ',sex:'M'},{id:'30',name:'ស៊នវីរៈ បញ្ញាទេពី',sex:'F'},
+    {id:'27',name:'ប៊ូ តាម៉ា',sex:'M'},{id:'65',name:'កែវ មុន្នីឧត្តម',sex:'M'},
+    {id:'56',name:'វន្តវិន ថាណា',sex:'F'},{id:'36',name:'ហាន ស៊ីវហ័រ',sex:'F'}
+  ],
+  'ថ្នាក់ទី៣(រសៀល)':[
+    {id:'9',name:'កែវ វីនសុឧត្តតារា',sex:'F'},{id:'28',name:'ឈុនតា រតនៈខុនដូ',sex:'F'},
+    {id:'10',name:'យ៉ា ពេជ្រម៉ូនីកា',sex:'F'},{id:'15',name:'លីម ពុទ្ធិរាជ',sex:'M'},
+    {id:'3',name:'ឡ ស៊ីវហ៊ួយ',sex:'F'},{id:'2',name:'ឡាយ មុនិចិន្ដា',sex:'F'},
+    {id:'24',name:'អោក និសិ្សត',sex:'M'},{id:'44',name:'ចំរើន ម៉ានីតា',sex:'F'}
+  ],
+  'ថ្នាក់ទី៤ ៥':[
+    {id:'1',name:'ឡាយ ភារ៉ាដាវីឌ',sex:'M'},{id:'42',name:'វង្ស មុនីកញ្ចនា',sex:'F'},
+    {id:'43',name:'ពៅ សុនីតា',sex:'F'},{id:'4',name:'ឡ សុវណ្ណហាន់ណា',sex:'F'}
+  ],
+  'មត្ដេយ្យកម្រិតទាប(ព្រឹក)':[
+    {id:'147',name:'សុភក្រ វីរបុត្រ',sex:'M'},{id:'166',name:'លីណា រ័ត្នហុងស័ក្កិ',sex:'M'},
+    {id:'160',name:'ថូ សិទ្ធីយូណា',sex:'F'},{id:'175',name:'សុគន្ធ បញ្ញាស័ក',sex:'M'},
+    {id:'000',name:'សុីម សរឧត្តម',sex:'M'},{id:'000',name:'និត សុធារាជ',sex:'M'},
+    {id:'000',name:'វ៉េត នីរីតា',sex:'F'}
+  ],
+  'មត្ដេយ្យកម្រិតទាប(រសៀល)':[
+    {id:'175',name:'ហេង ជ័រមុីង',sex:'F'},{id:'000',name:'សាយ សុខហេង',sex:'M'},
+    {id:'181',name:'ឈន ចេស្ដា',sex:'M'},{id:'000',name:'លាង លក្សុិកញ្ចនា',sex:'M'},
+    {id:'177',name:'វាសនា ពេជ្រសុម៉ាលី',sex:'F'}
+  ]
 };
 
-function startPolling() {
-  clearInterval(pollTimer);
-  pollTimer = setInterval(async () => {
-    if (FIREBASE_URL === 'YOUR_FIREBASE_URL_HERE') return;
-    try {
-      const remote = await fbGet();
-      if (!remote) return;
-      const remoteStr = JSON.stringify(remote);
-      if (remoteStr !== lastSavedHash) {
-        scores = remote;
-        lastSavedHash = remoteStr;
-        try { localStorage.setItem('mikids-fb-cache', remoteStr); } catch(e) {}
-        renderTable();
-        updateSummary();
-        updateLeaderboard();
-        const dot = document.getElementById('liveDot');
-        const st  = document.getElementById('liveStatus');
-        if (dot) { dot.style.background = '#f6c23e'; }
-        if (st)  { st.textContent = 'បានទទួល​ទិន្នន័យ​ថ្មី ✓'; }
-        setTimeout(() => {
-          if (dot) dot.style.background = '#38a169';
-          if (st)  st.textContent = 'ចែករំលែក Real-time';
-        }, 2000);
-      }
-    } catch(e) {}
-  }, 4000);
-}
+const enStudentDB={
+  'Fount1 Morning':[
+    {id:'82',name:'Chhang Singreay',sex:'F'},{id:'149',name:'Thi Sovann Sithika',sex:'F'},
+    {id:'143',name:'Phan Sokheng',sex:'M'},{id:'133',name:'Soth Linprossith',sex:'M'},
+    {id:'134',name:'Eab Liying',sex:'F'},{id:'88',name:'Sim Sithika',sex:'F'},
+    {id:'134',name:'Serey Chanvatthana',sex:'M'},{id:'88',name:'Hy Meeying',sex:'F'},
+    {id:'134',name:'Channy Sisanna',sex:'F'},{id:'88',name:'Chanmroeun Chanoudom',sex:'M'},
+    {id:'127',name:'Ham Chanboryreak',sex:'M'},{id:'182',name:'Tang Huylin',sex:'F'}
+  ],
+  'Fount1 Evening':[
+    {id:'116',name:'In Tiengvitu',sex:'M'},{id:'58',name:'Bunroeun Khemara',sex:'M'},
+    {id:'116',name:'Chhorn Mengsin',sex:'M'},{id:'58',name:'Ngoun Kimhab',sex:'M'},
+    {id:'145',name:'Chhay Pinging',sex:'F'},{id:'125',name:'Panha Petra',sex:'F'},
+    {id:'90',name:'Chomreun Ruonrithirach',sex:'M'},{id:'116',name:'Run Raksmey',sex:'M'},
+    {id:'90',name:'Huy Vannrothsetha',sex:'M'},{id:'116',name:'Nit Sotheara',sex:'M'},
+    {id:'159',name:'Thon Sigech',sex:'F'}
+  ],
+  'Fount2 Morning':[
+    {id:'86',name:'Theng Mengly',sex:'M'},{id:'00',name:'Sreang Sievfong',sex:'F'},
+    {id:'00',name:'Heng Meyich',sex:'F'},{id:'00',name:'Eurn Povoleak',sex:'F'},
+    {id:'00',name:'Han Sivhor',sex:'F'},{id:'00',name:'Roth Sovannchanthnaka',sex:'M'},
+    {id:'00',name:'Chomreun Manita',sex:'F'},{id:'70',name:'Roth Ratheb',sex:'M'},
+    {id:'00',name:'Chomreun Chanoudom',sex:'F'}
+  ],
+  'Fount2 Afternoon':[
+    {id:'68',name:'Song Rithysak',sex:'M'},{id:'00',name:'Pov Sokchen',sex:'M'},
+    {id:'66',name:'Bunleng Aidek',sex:'M'},{id:'67',name:'Pheak Speeddy',sex:'M'},
+    {id:'00',name:'Em Raechna',sex:'F'},{id:'00',name:'Ngoun Panhaputhysak',sex:'M'},
+    {id:'00',name:'Chen Kolin',sex:'M'},{id:'00',name:'Nara Hengly',sex:'M'},
+    {id:'00',name:'Chan Vireasith',sex:'M'},{id:'00',name:'Sok Sambath',sex:'M'},
+    {id:'00',name:'Sok Dalls',sex:'F'},{id:'00',name:'Ly Chaychon',sex:'M'}
+  ],
+  'Nursery Morning':[
+    {id:'148',name:'Beres Maikeus',sex:'M'},{id:'144',name:'Heng Santipheap',sex:'M'},
+    {id:'157',name:'Doung Sometha',sex:'M'},{id:'183',name:'Thong Fongmeng',sex:'M'},
+    {id:'158',name:'Punlok Viraksith',sex:'M'},{id:'172',name:'Reathana Sievle',sex:'F'},
+    {id:'180',name:'Rat Pichmorakot',sex:'F'},{id:'178',name:'Livthy Jutima',sex:'F'},
+    {id:'184',name:'Ho Liping',sex:'M'},{id:'174',name:'Vichika Munnitepey',sex:'F'},
+    {id:'185',name:'Yem Putthivong',sex:'M'},{id:'171',name:'Song Siriboth',sex:'M'}
+  ],
+  'Nursery Afternoon':[
+    {id:'148',name:'Beres Maikeus',sex:'M'},{id:'147',name:'Sopheak Virakboth',sex:'M'},
+    {id:'150',name:'Vet Nirita',sex:'F'},{id:'166',name:'Piseth Chanvatthana',sex:'M'},
+    {id:'166',name:'Lina Hongsakiathiphu',sex:'M'}
+  ],
+  'Level1 Morning':[
+    {id:'00',name:'Pov Sunita',sex:'F'},{id:'00',name:'Kaev Vinsouottara',sex:'F'},
+    {id:'00',name:'Chhuonta Rataknakhondou',sex:'F'},{id:'64',name:'Leang Voatchhanathnu',sex:'M'},
+    {id:'00',name:'Ya Pichmonika',sex:'F'},{id:'00',name:'Lim Puthireach',sex:'M'},
+    {id:'00',name:'Lor Sivhuoy',sex:'F'},{id:'00',name:'Lay Monichenda',sex:'F'},
+    {id:'00',name:'Ork Niset',sex:'M'},{id:'00',name:'Chan Sophayameakh',sex:'M'},
+    {id:'00',name:'Sonvirak Panhatepey',sex:'F'}
+  ],
+  'Level1 Afternoon':[
+    {id:'00',name:'Aok Outtom',sex:'M'},{id:'00',name:'Nara Henglay',sex:'M'},
+    {id:'62',name:'Chhuk Chenlong',sex:'M'}
+  ],
+  'Level 2':[
+    {id:'48',name:'Sopheak Titthdana',sex:'F'},{id:'63',name:'Neourn Vathanac',sex:'M'},
+    {id:'49',name:'Sopheak Rattank',sex:'M'},{id:'61',name:'Phal Sovann',sex:'M'},
+    {id:'53',name:'Hong Sothinal',sex:'M'},{id:'55',name:'Theng Julinh',sex:'F'},
+    {id:'1',name:'Lay Phearadavid',sex:'M'},{id:'4',name:'La Sovannhannah',sex:'F'}
+  ]
+};
 
-function showPage(page, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.page-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+// ════════════════════════════════════════════
+// TAB / MODE SWITCHING
+// ════════════════════════════════════════════
+let khMode='month', enMode='month';
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+function setKhMode(mode,btn){
+  khMode=mode;
+  document.querySelectorAll('#tab-kh .mode-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if (page === 'results') renderResults();
-  if (page === 'cert')    renderCerts();
+  document.getElementById('kh-wrap-month').style.display=mode==='month'?'':'none';
+  document.getElementById('kh-wrap-sem').style.display=mode==='sem'?'':'none';
+  document.getElementById('kh-period-label').textContent=mode==='sem'?'ឆមាស':'ប្រចាំខែ';
+  khOnClassChange();
+}
+function setEnMode(mode,btn){
+  enMode=mode;
+  document.querySelectorAll('#tab-en .mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('en-wrap-month').style.display=mode==='month'?'':'none';
+  document.getElementById('en-wrap-sem').style.display=mode==='sem'?'':'none';
+  document.getElementById('en-period-label').textContent=mode==='sem'?'Semester':'Month';
+  enOnClassChange();
 }
 
-function switchJudge() {
-  currentJudge = document.getElementById('judgeSelect').value;
-  try { localStorage.setItem('mikids-my-judge', currentJudge); } catch(e) {}
-  renderTable(); updateSummary(); updateLeaderboard();
-  showToast('ឥឡូវ​អ្នក​ជា គណៈ​កម្ម​ការ​ទី ' + currentJudge);
-}
+// ════════════════════════════════════════════
+// TABLE BUILDERS
+// ════════════════════════════════════════════
+const khSel=document.getElementById('kh-classSelect');
+khSel.add(new Option('-- ជ្រើសរើសថ្នាក់ --',''));
+Object.keys(khStudentDB).forEach(c=>khSel.add(new Option(c,c)));
 
-function buildTabs() {
-  const wrap = document.getElementById('classTabs');
-  wrap.innerHTML = '';
-  [...GRADE_LIST, 'ទាំងអស់'].forEach(g => {
-    const b = document.createElement('button');
-    b.className = 'class-tab' + (g === currentGrade ? ' active' : '');
-    b.textContent = g;
-    b.onclick = () => { currentGrade = g; buildTabs(); renderTable(); };
-    wrap.appendChild(b);
-  });
-}
+function khOnClassChange(){khMode==='month'?khLoadMonthly():khLoadSemester();}
 
-function renderTable() {
-  const area = document.getElementById('tableArea');
-  const filtered = currentGrade === 'ទាំងអស់' ? allStudents : allStudents.filter(s => s.grade === currentGrade);
-  const groups = {};
-  filtered.forEach(s => { if (!groups[s.grade]) groups[s.grade] = []; groups[s.grade].push(s); });
-  area.innerHTML = '';
-  Object.entries(groups).forEach(([g, sts]) => area.appendChild(makeTableCard(g, sts)));
-}
+// helper: score input td
+const scTd=(cls='',extra='')=>`<td><input type="number" class="sc-inp sc ${cls}" min="0" max="10" step="0.01" placeholder="" ${extra}></td>`;
 
-function makeTableCard(grade, students) {
-  const card = document.createElement('div');
-  card.className = 'table-card';
-  const done = students.filter(s => getTotal(s.code) > 0).length;
-  card.innerHTML = `
-    <div class="table-title">
-      <span>📚 ${grade} — ${students.length} នាក់</span>
-      <span style="font-size:13px;opacity:.85">បានបញ្ចូល: ${done}/${students.length}</span>
-    </div>
-    <div class="score-table-wrap">
-      <table class="score-table">
-        <thead><tr>
-          <th rowspan="2" class="col-no">ល.រ</th>
-          <th rowspan="2" class="col-name" style="text-align:left;padding-left:10px">គោត្តនាម និងនាម</th>
-          <th rowspan="2" class="col-sex">ភេទ</th>
-          <th rowspan="2" class="col-grade">ថ្នាក់</th>
-          <th rowspan="2" class="col-code">លេខ<br>សម្គាល់</th>
-          ${CRITERIA.map(c=>`<th>${c.label}<br><span style="font-size:10px;opacity:.9">${c.sub}</span></th>`).join('')}
-          <th rowspan="2" style="min-width:50px;background:#0f2547">សរុប<br>(10)</th>
-        </tr></thead>
-        <tbody>${students.map(s => makeRow(s)).join('')}</tbody>
-      </table>
-    </div>
-    <div class="action-bar">
-      <button class="btn btn-clear" onclick="clearGrade('${grade}')">🗑️ លុប ${grade}</button>
-    </div>`;
-  return card;
-}
-
-function sid(code) { return 'tot_' + code.replace(/\./g,'_'); }
-
-function makeRow(s) {
-  const sc = scores[s.code] || {};
-  const total = getTotal(s.code);
-  const tc = total===0?'empty':total>=8.5?'good':total>=7?'avg':'low';
-  const td = total===0 ? '—' : total.toFixed(2);
-  const inputs = CRITERIA.map(c => {
-    const v = sc[c.key] !== undefined && sc[c.key] !== '' ? sc[c.key] : '';
-    const cl = v==='' ? '' : parseFloat(v)>c.max ? ' over' : ' filled';
-    return `<td><input class="score-input${cl}" type="number" min="0" max="${c.max}" step="0.5"
-      value="${v}" data-code="${s.code}" data-key="${c.key}" data-max="${c.max}"
-      oninput="onInput(this)" onfocus="this.select()"></td>`;
-  }).join('');
-  return `<tr>
-    <td class="col-no">${s.no}</td>
-    <td class="col-name">${s.name}</td>
-    <td class="col-sex">${s.sex}</td>
-    <td class="col-grade" style="font-size:11px">${s.grade}</td>
-    <td class="col-code">${s.disp}</td>
-    ${inputs}
-    <td class="total-cell ${tc}" id="${sid(s.code)}">${td}</td>
-  </tr>`;
-}
-
-function onInput(el) {
-  const code = el.dataset.code, key = el.dataset.key, max = parseFloat(el.dataset.max);
-  const raw = el.value.trim();
-  el.classList.remove('over','filled');
-  if (raw !== '' && !isNaN(+raw)) el.classList.add(+raw > max ? 'over' : 'filled');
-  if (!scores[code]) scores[code] = {};
-  scores[code][key] = raw==='' || isNaN(+raw) ? '' : +raw;
-  refreshTotal(code);
-  clearTimeout(window._st);
-  window._st = setTimeout(() => { saveAllScores(); updateSummary(); updateLeaderboard(); }, 700);
-}
-
-function refreshTotal(code) {
-  const t = getTotal(code);
-  const el = document.getElementById(sid(code));
-  if (!el) return;
-  el.textContent = t===0 ? '—' : t.toFixed(2);
-  el.className = 'total-cell ' + (t===0?'empty':t>=8.5?'good':t>=7?'avg':'low');
-}
-
-function getTotal(code, sc_) {
-  const sc = sc_ || scores[code];
-  if (!sc) return 0;
-  let sum=0, any=false;
-  CRITERIA.forEach(c => {
-    const v = sc[c.key];
-    if (v!==''&&v!==undefined&&!isNaN(+v)) { sum += Math.min(+v,c.max); any=true; }
-  });
-  return any ? Math.round(sum*100)/100 : 0;
-}
-
-async function saveAllScores() {
-  const ok = await persistScores();
-  const dot=document.getElementById('saveDot'), st=document.getElementById('saveStatus');
-  dot.className='save-dot saved';
-  st.textContent = ok ? 'Firebase ✓ រក្សា​ទុក​ហើយ' : 'Local cache ✓';
-  setTimeout(()=>{ dot.className='save-dot'; st.textContent='រក្សា​ទុក​ស្វ័យ​ប្រវត្តិ'; },3000);
-}
-
-async function clearGrade(grade) {
-  if (!confirm('លុបពិន្ទុ ' + grade + '?')) return;
-  allStudents.filter(s=>s.grade===grade).forEach(s=>delete scores[s.code]);
-  await saveAllScores(); renderTable(); updateSummary(); updateLeaderboard();
-  showToast('បានលុបពិន្ទុ ' + grade);
-}
-
-function updateSummary() {
-  const g = document.getElementById('summaryGrid');
-  const ent = allStudents.filter(s=>getTotal(s.code)>0);
-  const tots = ent.map(s=>getTotal(s.code));
-  const avg = tots.length ? (tots.reduce((a,b)=>a+b,0)/tots.length).toFixed(1) : '—';
-  const mx  = tots.length ? Math.max(...tots).toFixed(1) : '—';
-  const pf  = tots.filter(t=>t===10).length;
-  g.innerHTML = `
-    <div class="summary-box"><div class="s-label">សិស្សចូលប្រកួត</div><div class="s-val">${allStudents.length}</div></div>
-    <div class="summary-box"><div class="s-label">បានបញ្ចូលពិន្ទុ</div><div class="s-val">${ent.length}</div></div>
-    <div class="summary-box"><div class="s-label">មធ្យមភាគ</div><div class="s-val">${avg}</div></div>
-    <div class="summary-box"><div class="s-label">ពិន្ទុខ្ពស់បំផុត</div><div class="s-val">${mx}</div></div>
-    <div class="summary-box"><div class="s-label">ពិន្ទុ ១០/១០</div><div class="s-val">${pf}</div></div>`;
-}
-
-function updateLeaderboard() {
-  const lb = document.getElementById('lbContent');
-  const ranked = allStudents
-    .map(s => ({...s, total: getTotal(s.code)}))
-    .filter(s => s.total > 0)
-    .sort((a,b) => b.total - a.total).slice(0,10);
-  if (!ranked.length) { lb.innerHTML='<p style="color:#999;font-size:13px">មិនទាន់មានពិន្ទុ</p>'; return; }
-  const medals = ['🥇','🥈','🥉'];
-  lb.innerHTML = ranked.map((s,i) => `
-    <div class="lb-row">
-      <span class="lb-rank">${medals[i]||(i+1)}</span>
-      <div>
-        <div class="lb-name">${s.name}</div>
-        <div class="lb-class">${s.grade} · ${s.disp}</div>
-      </div>
-      <span class="lb-score">${s.total.toFixed(1)}</span>
-    </div>`).join('');
-}
-
-function buildResGradeTabs() {
-  const wrap = document.getElementById('resGradeTabs');
-  wrap.innerHTML = '';
-  const tabs = [{val:'all', label:'ទាំងអស់'}, ...GRADE_LIST.map(g=>({val:g, label:g}))];
-  tabs.forEach(t => {
-    const b = document.createElement('button');
-    b.className = 'res-grade-tab' + (t.val === currentResGrade ? ' active' : '');
-    b.textContent = t.label;
-    b.onclick = () => { currentResGrade = t.val; buildResGradeTabs(); renderResults(); };
-    wrap.appendChild(b);
-  });
-}
-
-async function renderResults() {
-  buildResGradeTabs();
-  const jScores = scores;
-
-  let students = currentResGrade === 'all'
-    ? [...allStudents]
-    : allStudents.filter(s => s.grade === currentResGrade);
-
-  let rows = students.map(s => ({
-    ...s,
-    total: getTotal(s.code, jScores[s.code] || {})
-  }));
-
-  rows.sort((a,b) => b.total - a.total);
-  let rc = 1;
-  rows.forEach((r,i) => {
-    if (i > 0 && r.total < rows[i-1].total) rc = i+1;
-    r.rank = r.total > 0 ? rc : 0;
-  });
-
-  const total_n = rows.length;
-  const male_n  = rows.filter(r=>r.sex==='ប').length;
-  const fem_n   = rows.filter(r=>r.sex==='ស').length;
-  const entered = rows.filter(r=>r.total>0);
-  const exc_n   = entered.filter(r=>r.total>=8.5).length;
-  const exc_m   = entered.filter(r=>r.total>=8.5&&r.sex==='ប').length;
-  const exc_f   = entered.filter(r=>r.total>=8.5&&r.sex==='ស').length;
-  const fail_n  = entered.filter(r=>r.total<5).length;
-  const fail_m  = entered.filter(r=>r.total<5&&r.sex==='ប').length;
-  const fail_f  = entered.filter(r=>r.total<5&&r.sex==='ស').length;
-  const tots    = entered.map(r=>r.total);
-  const avg_all = tots.length ? (tots.reduce((a,b)=>a+b,0)/tots.length).toFixed(2) : '—';
-  const exc_pct = total_n>0?((exc_n/total_n)*100).toFixed(1):'0.0';
-  const fail_pct= total_n>0?((fail_n/total_n)*100).toFixed(1):'0.0';
-
-  const now = new Date();
-  const dateStr = `ភ្នំពេញ, ថ្ងៃទី ${now.getDate()} ខែ${KH_MONTHS[now.getMonth()]} ឆ្នាំ ${now.getFullYear()}`;
-  const gradeLabel = currentResGrade === 'all' ? 'ថ្នាក់ទាំងអស់' : currentResGrade;
-
-  rows.sort((a,b) => a.no - b.no);
-
-  const tableRows = rows.map((r,i) => {
-    const t = r.total;
-    let badge='', bClass='';
-    if (t===0)        { badge='មិនបញ្ចូល'; bClass='nit-none'; }
-    else if (t>=8.5)  { badge='ល្អណាស់';   bClass='nit-excellent'; }
-    else if (t>=7)    { badge='ល្អ';        bClass='nit-good'; }
-    else if (t>=5)    { badge='មធ្យម';      bClass='nit-average'; }
-    else              { badge='ខ្សោយ';      bClass='nit-fail'; }
-
-    let rankHtml = '<span class="rank-none">—</span>';
-    if (r.rank > 0) {
-      const rc2 = r.rank===1?'rank-1':r.rank===2?'rank-2':r.rank===3?'rank-3':'rank-n';
-      rankHtml = `<span class="rank-circle ${rc2}">${r.rank}</span>`;
-    }
-
-    const sc = jScores[r.code] || {};
-    const cVals = CRITERIA.map(c => {
-      const v = sc[c.key];
-      return (v!==undefined&&v!==''&&!isNaN(+v)) ? (+v).toFixed(1) : '—';
-    }).join('</td><td style="font-size:12px">');
-
-    return `<tr>
-      <td>${i+1}</td>
-      <td style="font-size:12px">${r.disp}</td>
-      <td class="name-col">${r.name}</td>
-      <td>${r.sex}</td>
-      <td style="font-size:12px">${cVals}</td>
-      <td style="font-weight:bold;font-size:14px;color:#1a3a6b">${t>0?t.toFixed(2):'0.00'}</td>
-      <td>${t>0?t.toFixed(2):'0.00'}</td>
-      <td>${rankHtml}</td>
-      <td><span class="nittoes ${bClass}">${badge}</span></td>
+function khLoadMonthly(){
+  const tbody=document.getElementById('kh-monthBody');
+  tbody.innerHTML='';
+  (khStudentDB[khSel.value]||[]).forEach((s,i)=>{
+    tbody.innerHTML+=`<tr class="kh-row" data-id="${s.id}" data-sex="${s.sex}">
+      <td><b>${s.id}</b></td>
+      <td><input type="text" value="${s.name}" class="in-name"></td>
+      <td>${s.sex}</td>
+      ${scTd('km')+scTd('km')+scTd('km')+scTd('km')+scTd('math')+scTd('sci')+scTd('soc')+scTd('soc')+scTd('soc')+scTd('soc')+scTd('phy')+scTd('phy')+scTd('comp')+scTd('ak')+scTd('val')+scTd('cn')}
+      <td><input type="number" class="sc-inp sc inp-hw kh-hw-score" min="0" max="10" step="0.01" placeholder=""></td>
+      <td style="text-align:center;">
+        <input type="file" accept="image/*" onchange="previewImg(event,'kh-img${i}')" style="width:110px;display:block;margin:0 auto;font-size:7.5pt;">
+        <input type="hidden" id="kh-img${i}">
+      </td>
     </tr>`;
-  }).join('');
+  });
+  loadData('kh','month',khSel.value);
+  attachAutoSave('kh','month',khSel.value);
+}
 
-  document.getElementById('reportArea').innerHTML = `
-  <div class="report-wrap">
-    <div class="rpt-top">
-      <div class="rpt-logo-box">
-        <img class="rpt-logo-circle" src="https://i.ibb.co/RTWkghgd/Logo-Mikid-removebg-preview.png" alt="MIKIDS" onerror="this.style.display='none'">
-        <div class="rpt-school">
-          <div class="km">សាលាអន្តរជាតិម៉ាយឃីដ</div>
-          <div class="en">MIKIDS INTERNATIONAL SCHOOL</div>
-        </div>
-      </div>
-      <div class="rpt-right">
-        <p>ព្រះរាជាណាចក្រកម្ពុជា</p>
-        <p>ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
-        <p class="stars">✦ ✦ ✦</p>
-      </div>
+function khLoadSemester(){
+  const tbody=document.getElementById('kh-semBody');
+  tbody.innerHTML='';
+  (khStudentDB[khSel.value]||[]).forEach((s,i)=>{
+    tbody.innerHTML+=`<tr class="kh-sem-row" data-id="${s.id}" data-sex="${s.sex}">
+      <td><b>${s.id}</b></td>
+      <td><input type="text" value="${s.name}" class="in-name"></td>
+      <td>${s.sex}</td>
+      ${scTd('kh-ex').repeat(15)}
+      <td><input type="number" class="sc-inp sc inp-hw" min="0" max="10" step="0.01" placeholder=""></td>
+      <td class="calc-cell kh-exam-avg">—</td>
+      <td><input type="number" class="sc-inp sc kh-mn inp-mn" min="0" max="10" step="0.01" placeholder=""></td>
+      <td class="calc-cell kh-sem-avg">—</td>
+      <td class="rank-cell kh-rank">—</td>
+      <td style="text-align:center;">
+        <input type="file" accept="image/*" onchange="previewImg(event,'kh-sem-img${i}')" style="width:110px;display:block;margin:0 auto;font-size:7.5pt;">
+        <input type="hidden" id="kh-sem-img${i}">
+      </td>
+    </tr>`;
+  });
+  loadData('kh','sem',khSel.value);
+  attachAutoSave('kh','sem',khSel.value);
+}
+
+const enSel=document.getElementById('en-classSelect');
+function enOnClassChange(){enMode==='month'?enLoadMonthly():enLoadSemester();}
+
+function enLoadMonthly(){
+  const tbody=document.getElementById('en-monthBody');
+  tbody.innerHTML='';
+  (enStudentDB[enSel.value]||[]).forEach((s,i)=>{
+    tbody.innerHTML+=`<tr class="en-row" data-id="${s.id}" data-sex="${s.sex}">
+      <td><b>${s.id}</b></td>
+      <td><input class="in-name" type="text" value="${s.name}" style="font-family:'DM Sans',sans-serif;"></td>
+      <td>${s.sex==='M'?'M':'F'}</td>
+      ${scTd('en').repeat(10)}
+      <td style="text-align:center;">
+        <input type="file" accept="image/*" onchange="previewImg(event,'en-img${i}')" style="width:110px;display:block;margin:0 auto;font-size:7.5pt;">
+        <input type="hidden" id="en-img${i}">
+      </td>
+    </tr>`;
+  });
+  loadData('en','month',enSel.value);
+  attachAutoSave('en','month',enSel.value);
+}
+
+function enLoadSemester(){
+  const tbody=document.getElementById('en-semBody');
+  tbody.innerHTML='';
+  (enStudentDB[enSel.value]||[]).forEach((s,i)=>{
+    tbody.innerHTML+=`<tr class="en-sem-row" data-id="${s.id}" data-sex="${s.sex}">
+      <td><b>${s.id}</b></td>
+      <td><input class="in-name" type="text" value="${s.name}" style="font-family:'DM Sans',sans-serif;"></td>
+      <td>${s.sex==='M'?'M':'F'}</td>
+      <td><input type="number" class="sc-inp sc en-s1" min="0" max="10" step="0.01" placeholder="" style="width:50px;border:1.5px solid var(--sem1);"></td>
+      <td><input type="number" class="sc-inp sc en-s2" min="0" max="10" step="0.01" placeholder="" style="width:50px;border:1.5px solid var(--sem2);"></td>
+      <td><input type="number" class="sc-inp sc en-s3" min="0" max="10" step="0.01" placeholder="" style="width:50px;border:1.5px solid #334155;"></td>
+      <td class="avg-cell en-avg">—</td>
+      <td class="grade-cell en-grade" style="color:#94a3b8;">—</td>
+      <td class="rank-cell en-rank">—</td>
+      <td style="text-align:center;">
+        <input type="file" accept="image/*" onchange="previewImg(event,'en-sem-img${i}')" style="width:110px;display:block;margin:0 auto;font-size:7.5pt;">
+        <input type="hidden" id="en-sem-img${i}">
+      </td>
+    </tr>`;
+  });
+  loadData('en','sem',enSel.value);
+  attachAutoSave('en','sem',enSel.value);
+}
+
+function previewImg(e,id){
+  const r=new FileReader();
+  r.onload=f=>{const el=document.getElementById(id);if(el)el.value=f.target.result;};
+  r.readAsDataURL(e.target.files[0]);
+}
+
+// ════════════════════════════════════════════
+// KHMER DATE
+// ════════════════════════════════════════════
+function getKhmerDate(date){
+  const d=new Date(date),year=d.getFullYear(),month=d.getMonth()+1,day=d.getDate();
+  const khDays=['អាទិត្យ','ចន្ទ','អង្គារ','ពុធ','ព្រហស្បតិ៍','សុក្រ','សៅរ៍'];
+  const toKh=n=>String(n).split('').map(c=>'០១២៣៤៥៦៧៨៩'[+c]).join('');
+  const a=Math.floor((14-month)/12),y=year+4800-a,m=month+12*a-3;
+  const JDN=day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
+  const REF=2451550,SYN=29.53059;
+  const lunarAge=((JDN-REF)%SYN+SYN)%SYN;
+  const ldr=Math.floor(lunarAge)+1;
+  let paksha,ld;
+  if(ldr<=15){paksha='កើត';ld=ldr;}else{paksha='រោច';ld=ldr-15;}
+  const months=['មិគសិរ','បុស្ស','មាឃ','ផល្គុន','ចេត្រ','វិសាខ','ជេស្ឋ','អាសាឍ','ស្រាពណ៍','ភទ្របទ','អស្សុជ','កត្តិក'];
+  const tl=Math.floor((JDN-REF)/SYN);
+  const khM=months[((tl+4)%12+12)%12];
+  const animals=['ជូត','ឆ្លូវ','ខាល','ថោះ','រោង','ម្សាញ់','មមី','មមែ','វក','រកា','ជ','កុរ'];
+  const sasors=['កុរ​ស័ក','ឯក​ស័ក','ទោ​ស័ក','ត្រី​ស័ក','ចត្វា​ស័ក','បញ្ចស័ក','ច​ស័ក','សប្ត​ស័ក','អដ្ឋ​ស័ក','នព្វ​ស័ក'];
+  const effYear=month<4?year-1:year;
+  const animal=animals[((effYear-1900)%12+12)%12];
+  const sasor=sasors[(year+1)%10];
+  return `ថ្ងៃ${khDays[d.getDay()]} ${toKh(ld)}${paksha} ខែ${khM} ឆ្នាំ${animal} ${sasor} ព.ស${toKh(year+543)}`;
+}
+
+// ════════════════════════════════════════════
+// PDF GENERATORS
+// ════════════════════════════════════════════
+function buildHonorCard(s,rank,isKh,defImg){
+  const khR=['','១','២','៣','៤','៥'];
+  const bc=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'plain';
+  const rl=isKh?khR[rank]:String(rank);
+  const mf=isKh?`style="font-family:'Moul',serif;"`:'';
+  const imgSrc=s?.img||defImg;
+  const C='white',S='20px',T='4px';
+  const corners=`<div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;">
+    <div style="position:absolute;top:0;left:0;width:${S};height:${S};border-top:${T} solid ${C};border-left:${T} solid ${C};"></div>
+    <div style="position:absolute;top:0;right:0;width:${S};height:${S};border-top:${T} solid ${C};border-right:${T} solid ${C};"></div>
+    <div style="position:absolute;bottom:0;left:0;width:${S};height:${S};border-bottom:${T} solid ${C};border-left:${T} solid ${C};"></div>
+    <div style="position:absolute;bottom:0;right:0;width:${S};height:${S};border-bottom:${T} solid ${C};border-right:${T} solid ${C};"></div>
+  </div>`;
+  const scoreTag=!isKh?`<div style="font-size:7.5pt;color:#64748b;margin-top:2px;">Avg: ${s?.avg?.toFixed(2)||'0.00'}</div>`:'';
+  return `<div style="width:46mm;text-align:center;">
+    <div class="rank-badge ${bc}" ${mf}>${rl}</div>
+    <div style="position:relative;display:inline-block;width:46mm;height:38mm;">
+      <div class="photo-box"><img src="${imgSrc}"></div>${corners}
     </div>
-    <div class="rpt-title-box">
-      <h2>តារាងបូកសរុបពិន្ទុប្រកួតអំណាន "ភាសាខ្មែរ"</h2>
-      <p>${gradeLabel} — វគ្គផ្តាច់ព្រ័ត្រ ឆ្នាំ ២០២៥-២០២៦ &nbsp;|&nbsp; គណៈ​កម្ម​ការ​ទាំង ៥</p>
-    </div>
-    <div class="rpt-stats">
-      សិស្សសរុប <strong>${total_n}</strong> នាក់ (ប្រុស ${male_n}, ស្រី ${fem_n}) &nbsp;|&nbsp;
-      មធ្យមភាគ <strong>${avg_all}</strong> &nbsp;|&nbsp;
-      ល្អណាស់: <strong>${exc_n}</strong> នាក់ (ប ${exc_m}/ស ${exc_f}) = ${exc_pct}% &nbsp;|&nbsp;
-      ខ្សោយ: <strong>${fail_n}</strong> នាក់ (ប ${fail_m}/ស ${fail_f}) = ${fail_pct}%
-    </div>
-    <table class="rpt-table">
-      <thead>
-        <tr>
-          <th rowspan="2" style="width:30px">ល.រ</th>
-          <th rowspan="2" style="width:54px">អត្តលេខ</th>
-          <th rowspan="2" style="text-align:left;padding-left:8px">គោត្តនាម-នាម</th>
-          <th rowspan="2" style="width:32px">ភេទ</th>
-          <th colspan="5" style="background:#2a5298;font-size:11px">លម្អិតពិន្ទុ</th>
-          <th rowspan="2" style="width:54px">ពិន្ទុសរុប</th>
-          <th rowspan="2" style="width:54px">មធ្យមភាគ</th>
-          <th rowspan="2" style="width:48px">ចំណាត់ថ្នាក់</th>
-          <th rowspan="2" style="width:72px">និទ្ទេស</th>
-        </tr>
-        <tr>
-          ${CRITERIA.map(c=>`<th style="background:#2a5298;font-size:10px">${c.label.replace('<br>',' ')}<br>${c.sub}</th>`).join('')}
-        </tr>
-      </thead>
-      <tbody>${tableRows}</tbody>
-    </table>
-    <div class="rpt-footer">
-      <div class="rpt-legend">
-        <span>■ ល្អណាស់ ≥ ៨.៥</span>
-        <span>■ ល្អ ៧–៨.៤</span>
-        <span>■ មធ្យម ៥–៦.៩</span>
-        <span>■ ខ្សោយ &lt;៥</span>
-      </div>
-      <div class="rpt-sigs">
-        <div class="sig-block"><div>ចារផ្ទាំង និងអ​ធិការ</div><div class="sub">ពោធ​បាន​សោភ​ណ</div></div>
-        <div class="sig-block"><div>${dateStr}</div><div style="margin-top:5px">អ្នកគ្រប់គ្រងថ្នាក់</div></div>
-      </div>
-    </div>
+    <span class="name-tag">${s?.name||''}</span>${scoreTag}
   </div>`;
 }
 
-function getNittoes(t) {
-  if (t<=0)   return {label:'—',         bg:'#eee',     color:'#888'};
-  if (t>=8.5) return {label:'ល្អណាស់',  bg:'#c6f6d5',  color:'#22543d'};
-  if (t>=7)   return {label:'ល្អ',       bg:'#bee3f8',  color:'#2a4e7a'};
-  if (t>=5)   return {label:'មធ្យម',     bg:'#fefcbf',  color:'#7b4f12'};
-  return             {label:'ខ្សោយ',    bg:'#fed7d7',  color:'#822727'};
+function buildFooter(todayKh,today,dirLabel,teachLabel,isMoul){
+  const ff=isMoul?`font-family:'Moul',serif;`:`font-family:'Playfair Display',serif;`;
+  return `<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;padding:0 8px;font-size:9.5pt;">
+    <div style="text-align:center;">${dirLabel}<br><strong style="${ff}font-size:10pt;">នាយកសាលា</strong></div>
+    <div style="text-align:center;">${todayKh}<br><span style="font-size:9pt;">${today}</span><br><strong style="${ff}font-size:10pt;">${teachLabel}</strong></div>
+  </div>`;
 }
 
-const RANK_INFO = [
-  {medal:'🥇', km:'ទី​មួយ',   en:'1st Place'},
-  {medal:'🥈', km:'ទី​ពីរ',   en:'2nd Place'},
-  {medal:'🥉', km:'ទី​បី',    en:'3rd Place'},
-  {medal:'🎗️', km:'ទី​បួន',   en:'4th Place'},
-  {medal:'🎖️', km:'ទី​ប្រាំ',  en:'5th Place'},
-];
+const khLegend=`<p style="margin-top:6px;font-size:8pt;color:#475569;">
+  &#9632; <span style="color:#7c3aed;">ល្អណាស់: ≥ ៩.៥</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#15803d;">ល្អ: ៨–៩.៤</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#2563eb;">ល្អបង្គួរ: ៦.៥–៧.៩</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#d97706;">មធ្យម: ៥–៦.៤</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#be123c;">ខ្សោយ: &lt; ៥</span>
+</p>`;
+const enLegend=`<p style="margin-top:6px;font-size:8pt;color:#475569;">
+  &#9632; <span style="color:#7c3aed;">Outstanding (A+): ≥ 9.5</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#15803d;">Excellent (A): 8–9.4</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#2563eb;">Good (B): 6.5–7.9</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#d97706;">Average (C): 5–6.4</span> &nbsp;|&nbsp;
+  &#9632; <span style="color:#be123c;">Fail (F): &lt; 5</span>
+</p>`;
 
-async function renderCerts() {
-  const gradeVal = document.getElementById('cGrade').value;
-  const jScores  = scores;
-  const judgeLabel = 'គណៈ​កម្ម​ការ​ទាំង ៥';
-  const area = document.getElementById('certArea');
-  const now = new Date();
-  const dateStr = `${now.getDate()} ខែ${KH_MONTHS[now.getMonth()]} ឆ្នាំ ${now.getFullYear()}`;
-
-  let html = '';
-  if (gradeVal === 'all') {
-    GRADE_LIST.forEach(grade => {
-      const students = allStudents.filter(s => s.grade === grade);
-      const rows = students
-        .map(s => ({...s, total: getTotal(s.code, jScores[s.code]||{})}))
-        .filter(r => r.total > 0)
-        .sort((a,b) => b.total - a.total)
-        .slice(0, 5);
-      if (rows.length) {
-        html += `<div style="margin-bottom:8px;font-size:15px;font-weight:bold;color:#1a3a6b;border-left:4px solid #f6c23e;padding-left:10px">${grade}</div>`;
-        html += '<div class="cert-grid">' + rows.map((r,i) => makeCert(r, i+1, judgeLabel, dateStr)).join('') + '</div>';
-      }
+function khGenerate(type){
+  if(!khSel.value)return alert('សូមជ្រើសរើសថ្នាក់!');
+  const month=document.getElementById('kh-monthInput').value;
+  const year=document.getElementById('kh-yearInput').value;
+  const now=new Date();
+  const todayKh=getKhmerDate(now);
+  const today=`ភ្នំពេញ, ថ្ងៃទី ${now.getDate()} ខែ ${month} ឆ្នាំ ${now.getFullYear()}`;
+  const defImg='https://i.ibb.co/20Z4h6Z8/Untitled-design-6.png';
+  let students=[];
+  if(khMode==='sem'){
+    document.querySelectorAll('.kh-sem-row').forEach((r,i)=>{
+      const semCell=r.querySelector('.kh-sem-avg');
+      const avg=semCell&&semCell.textContent!=='—'?parseFloat(semCell.textContent):0;
+      const hwEl=r.querySelector('.sc.inp-hw');
+      const hw=hwEl&&hwEl.value.trim()!==''?parseFloat(hwEl.value):null;
+      students.push({id:r.dataset.id,name:r.querySelector('.in-name').value,
+        sex:r.dataset.sex==='M'?'ប្រុស':'ស្រី',isFemale:r.dataset.sex==='F',
+        avg,total:avg,hw,img:document.getElementById('kh-sem-img'+i)?.value||''});
     });
   } else {
-    const students = allStudents.filter(s => s.grade === gradeVal);
-    const rows = students
-      .map(s => ({...s, total: getTotal(s.code, jScores[s.code]||{})}))
-      .filter(r => r.total > 0)
-      .sort((a,b) => b.total - a.total)
-      .slice(0, 5);
-    if (rows.length) {
-      html += '<div class="cert-grid">' + rows.map((r,i) => makeCert(r, i+1, judgeLabel, dateStr)).join('') + '</div>';
-    }
+    document.querySelectorAll('.kh-row').forEach((r,i)=>{
+      const {total,avg}=calcAvg(r);
+      const hwEl=r.querySelector('.kh-hw-score');
+      const hw=hwEl&&hwEl.value.trim()!==''?parseFloat(hwEl.value):null;
+      students.push({id:r.dataset.id,name:r.querySelector('.in-name').value,
+        sex:r.dataset.sex==='M'?'ប្រុស':'ស្រី',isFemale:r.dataset.sex==='F',
+        avg,total,hw,img:document.getElementById('kh-img'+i)?.value||''});
+    });
   }
-
-  if (!html) {
-    area.innerHTML = '<div style="text-align:center;padding:50px;color:#999;font-size:15px">មិនទាន់មានទិន្នន័យ — សូមបញ្ចូលពិន្ទុជាមុន</div>';
-    return;
-  }
-  area.innerHTML = `<div class="cert-area-wrap">${html}</div>`;
-}
-
-function makeCert(r, rank, judgeVal, dateStr) {
-  const nit = getNittoes(r.total);
-  const ri  = RANK_INFO[rank-1] || {medal:'🎗️', km:`ទី ${rank}`, en:`Rank ${rank}`};
-  const rankClass = `cert-rank-${rank <= 5 ? rank : 'n'}`;
-  const rankKmFull = ['ទី​មួយ','ទី​ពីរ','ទី​បី','ទី​បួន','ទី​ប្រាំ'][rank-1] || `ទី ${rank}`;
-  const medals = ['🥇','🥈','🥉','🏅','🎖️'];
-  const medal = medals[rank-1] || '🎗️';
-
-  return `
-  <div class="certificate ${rankClass}">
-    <div class="cert-border-outer"></div>
-    <div class="cert-border-inner"></div>
-    <div class="cert-ribbon">
-      <div class="cert-ribbon-top-stripe"></div>
-      <div class="cert-ribbon-content">
-        <img class="cert-ribbon-logo"
-          src="https://i.ibb.co/RTWkghgd/Logo-Mikid-removebg-preview.png"
-          alt="MIKIDS" onerror="this.style.display='none'">
-        <div class="cert-ribbon-text">
-          <div class="cert-ribbon-km">សាលាអន្តរជាតិម៉ាយឃីដ</div>
-          <div class="cert-ribbon-en">Mikids International School</div>
-        </div>
-      </div>
-      <div class="cert-ribbon-bottom"></div>
-    </div>
-    <div class="cert-medal-badge">
-      <div class="cert-medal-ribbon-bar"></div>
-      <div class="cert-medal-circle">${medal}</div>
-    </div>
-    <div class="cert-body">
-      <div class="cert-seal"></div>
-      <div class="cert-rank-label">${rankKmFull} · ${ri.en}</div>
-      <div class="cert-title-km">បត្រ​សរ​សើរ</div>
-      <div class="cert-title-en">Certificate of Achievement</div>
-      <div class="cert-ornament">
-        <div class="cert-ornament-line"></div>
-        <span class="cert-ornament-gem">✦</span>
-        <div class="cert-ornament-line r"></div>
-      </div>
-      <span class="cert-event-tag">ប្រកួត​អំណាន "ភាសាខ្មែរ" &nbsp;—&nbsp; ២០២៥–២០២៦</span>
-      <div class="cert-presents">សំ​ដែង​នូវ​ការ​សរ​សើរ​ដ៏​ខ្ពង់​ខ្ពស់​ចំ​ពោះ</div>
-      <div class="cert-name">${r.name}</div>
-      <div class="cert-name-underline"></div>
-      <div class="cert-meta">
-        <span>${r.grade}</span>
-        <span class="cert-meta-dot">◆</span>
-        <span>លេខ ${r.disp}</span>
-        <span class="cert-meta-dot">◆</span>
-        <span>${r.sex === 'ប' ? 'ប្រុស' : 'ស្រី'}</span>
-        <span class="cert-meta-dot">◆</span>
-        <span>${judgeVal}</span>
-      </div>
-      <div>
-        <div class="cert-score-display">
-          <div class="cert-score-label">ពិន្ទុ​សរុប</div>
-          <div class="cert-score-value">
-            ${r.total.toFixed(2)}
-            <span class="cert-score-slash">/</span>
-            <span class="cert-score-max">១០</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <span class="cert-nit-badge" style="background:${nit.bg};color:${nit.color}">${nit.label}</span>
-      </div>
-      <div class="cert-footer-divider"></div>
-      <div class="cert-footer">
-        <div class="cert-sig">
-          <div class="cert-sig-line"></div>
-          <div class="cert-sig-name">ចារ​ផ្ទាំង</div>
-          <div class="cert-sig-sub">ពោធ​បាន​សោភ​ណ</div>
-        </div>
-        <div class="cert-footer-date">ភ្នំ​ពេញ<br>ថ្ងៃ​ទី ${dateStr}</div>
-        <div class="cert-sig">
-          <div class="cert-sig-line"></div>
-          <div class="cert-sig-name">នាយក​សាលា</div>
-          <div class="cert-sig-sub">MIKIDS</div>
-        </div>
-      </div>
-    </div>
+  students.sort((a,b)=>b.avg-a.avg);
+  const totalS=students.length,femaleS=students.filter(s=>s.isFemale).length;
+  const passed=students.filter(s=>s.avg>=5);
+  const passCount=passed.length,passFemale=passed.filter(s=>s.isFemale).length;
+  const failCount=totalS-passCount,failFemale=femaleS-passFemale;
+  const pLabel=khMode==='sem'?`ឆមាស ${month}`:`ខែ${month}`;
+  let html=`<div class="page-frame"><div class="doc-header">
+    <div class="hd-logo"><img src="https://i.ibb.co/RTWkghgd/Logo-Mikid-removebg-preview.png"></div>
+    <div class="hd-nation-kh">ព្រះរាជាណាចក្រកម្ពុជា<br>ជាតិ សាសនា ព្រះមហាក្សត្រ<br><span style="font-family:serif;font-weight:normal;">✵✵✵</span></div>
   </div>`;
+  if(type==='REPORT'){
+    html+=`<div style="text-align:center;margin:4px 0 8px;">
+      <h1 style="font-family:'Moul',serif;font-size:16pt;">ចំណាត់ថ្នាក់${khMode==='sem'?'ប្រចាំឆមាស':'ប្រចាំខែ'}</h1>
+      <p style="font-family:'Moul',serif;font-size:11pt;font-weight:bold;">ថ្នាក់៖ ${khSel.value} | ${pLabel} | ឆ្នាំ${year}</p>
+    </div>
+    <table class="rpt-tbl">
+      <thead><tr><th>ល.រ</th><th>អត្ត​លេខ</th><th>គោត្តនាម-នាម</th><th>ភេទ</th><th>មធ្យមភាគ</th><th>ចំណាត់ថ្នាក់</th><th>និទ្ទេស</th></tr></thead>
+      <tbody>${students.map((s,i)=>{const g=khGrade(s.avg);return`<tr><td>${i+1}</td><td>${s.id}</td><td class="name-col">${s.name}</td><td>${s.sex}</td><td><b>${s.avg.toFixed(2)}</b></td><td><b>${i+1}</b></td><td style="color:${g.color};font-weight:700;">${g.text}</td></tr>`;}).join('')}</tbody>
+    </table>
+    <div class="stats">
+      <p>បញ្ជីបញ្ចប់ ${totalS} នាក់ ក្នុងនោះស្រី ${femaleS} នាក់</p>
+      <p>ជាប់ ${passCount} នាក់ ក្នុងនោះស្រី ${passFemale} នាក់ ស្មើ ${totalS?((passCount/totalS)*100).toFixed(2):0}%</p>
+      <p>ធ្លាក់ ${failCount} នាក់ ក្នុងនោះស្រី ${failFemale} នាក់ ស្មើ ${totalS?((failCount/totalS)*100).toFixed(2):0}%</p>
+      ${khLegend}
+    </div>`;
+  } else {
+    const top5=students.slice(0,5);
+    html+=`<div style="text-align:center;">
+      <h1 style="font-family:'Moul',serif;color:#be123c;font-size:36pt;margin:0;">តារាងកិត្តិយស</h1>
+      <div style="width:180px;height:2px;background:#f59e0b;margin:3px auto;"></div>
+      <p style="font-family:'Moul',serif;font-size:12pt;font-weight:bold;margin-top:4px;">ថ្នាក់៖ ${khSel.value}</p>
+      <p style="font-family:'Moul',serif;font-size:11pt;">${pLabel} ឆ្នាំ ${year}</p>
+    </div>
+    <div class="honor-grid">
+      <div class="honor-row">${buildHonorCard(top5[0],1,true,defImg)}</div>
+      ${top5.length>=3?`<div class="honor-row">${buildHonorCard(top5[1],2,true,defImg)}${buildHonorCard(top5[2],3,true,defImg)}</div>`:''}
+      ${top5.length>=5?`<div class="honor-row">${buildHonorCard(top5[3],4,true,defImg)}${buildHonorCard(top5[4],5,true,defImg)}</div>`:''}
+    </div>`;
+  }
+  html+=buildFooter(todayKh,today,'បានឃើញ និងឯកភាព','គ្រូប្រចាំថ្នាក់',true)+'</div>';
+  const c=document.getElementById('kh-pdf-content');
+  c.innerHTML=html;c.style.display='block';
+  document.getElementById('kh-downloadBtn').style.display='block';
+  c.scrollIntoView({behavior:'smooth'});
 }
 
-function doPrint() { window.print(); }
-
-function buildPrintPage(contentHTML, title) {
-  const styles = Array.from(document.querySelectorAll('style')).map(s => s.outerHTML).join('\n');
-  const links  = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.outerHTML).join('\n');
-  const autoprint = '<img src=x onerror="setTimeout(function(){window.print();},800)">';
-  return '<!DOCTYPE html><html lang="km"><head><meta charset="UTF-8"><title>' + title + '</title>'
-    + links + styles
-    + '<style>body{background:white!important;margin:0;padding:0;}'
-    + '@page{margin:10mm;size:A4 portrait;}'
-    + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-    + '</st'+'yle></he'+'ad><bo'+'dy>'
-    + contentHTML + autoprint
-    + '</bo'+'dy></ht'+'ml>';
+function enGenerate(type){
+  if(!enSel.value)return alert('Please select a class first!');
+  const month=document.getElementById('en-monthInput').value;
+  const year=document.getElementById('en-yearInput').value;
+  const now=new Date();
+  const todayEn=`Phnom Penh, ${now.toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'})}`;
+  const todayKh=getKhmerDate(now);
+  const defImg='https://i.ibb.co/20Z4h6Z8/Untitled-design-6.png';
+  let students=[];
+  if(enMode==='sem'){
+    document.querySelectorAll('.en-sem-row').forEach((r,i)=>{
+      const avgCell=r.querySelector('.en-avg');
+      const avg=avgCell&&avgCell.textContent!=='—'?parseFloat(avgCell.textContent):0;
+      students.push({id:r.dataset.id,name:r.querySelector('.in-name').value,
+        sex:r.dataset.sex==='M'?'Male':'Female',isFemale:r.dataset.sex==='F',
+        avg,total:avg,img:document.getElementById('en-sem-img'+i)?.value||''});
+    });
+  } else {
+    document.querySelectorAll('.en-row').forEach((r,i)=>{
+      const {total,avg}=calcAvg(r);
+      students.push({id:r.dataset.id,name:r.querySelector('.in-name').value,
+        sex:r.dataset.sex==='M'?'Male':'Female',isFemale:r.dataset.sex==='F',
+        avg,total,img:document.getElementById('en-img'+i)?.value||''});
+    });
+  }
+  students.sort((a,b)=>b.avg-a.avg);
+  const totalS=students.length,femaleS=students.filter(s=>s.isFemale).length;
+  const passed=students.filter(s=>s.avg>=5);
+  const passCount=passed.length,passFemale=passed.filter(s=>s.isFemale).length;
+  const failCount=totalS-passCount,failFemale=femaleS-passFemale;
+  const pLabel=enMode==='sem'?`Semester ${month}`:`Month: ${month}`;
+  let html=`<div class="page-frame"><div class="doc-header">
+    <div class="hd-logo"><img src="https://i.ibb.co/RTWkghgd/Logo-Mikid-removebg-preview.png"></div>
+    <div class="hd-nation-en">Kingdom of Cambodia<br>Nation · Religion · King<br>✵ ✵ ✵</div>
+  </div>`;
+  if(type==='REPORT'){
+    html+=`<div style="text-align:center;margin:4px 0 8px;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:17pt;font-weight:700;">${enMode==='sem'?'Semester Academic Rankings':'Monthly Academic Rankings'}</h1>
+      <p style="font-size:10.5pt;font-weight:600;margin-top:3px;">Class: ${enSel.value} | ${pLabel} | Year: ${year}</p>
+    </div>
+    <table class="rpt-tbl">
+      <thead><tr><th>#</th><th>ID</th><th>Full Name</th><th>Gender</th><th>Average</th><th>Rank</th><th>Grade</th></tr></thead>
+      <tbody>${students.map((s,i)=>{const g=enGrade(s.avg);return`<tr><td>${i+1}</td><td>${s.id}</td><td class="name-col">${s.name}</td><td>${s.sex}</td><td><b>${s.avg.toFixed(2)}</b></td><td><b>${i+1}</b></td><td style="color:${g.color};font-weight:700;">${g.text}</td></tr>`;}).join('')}</tbody>
+    </table>
+    <div class="stats">
+      <p>Total: <b>${totalS}</b> (Female: <b>${femaleS}</b>)</p>
+      <p>Passed: <b>${passCount}</b> (Female: <b>${passFemale}</b>) — ${totalS?((passCount/totalS)*100).toFixed(1):0}%</p>
+      <p>Failed: <b>${failCount}</b> (Female: <b>${failFemale}</b>) — ${totalS?((failCount/totalS)*100).toFixed(1):0}%</p>
+      ${enLegend}
+    </div>`;
+  } else {
+    const top5=students.slice(0,5);
+    html+=`<div style="text-align:center;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:28pt;color:#be123c;">Honor Board</h1>
+      <div style="width:140px;height:2px;background:#f59e0b;margin:3px auto;"></div>
+      <p style="font-weight:700;font-size:12pt;margin-top:4px;">Class: ${enSel.value}</p>
+      <p style="font-size:11pt;">${pLabel} | Year: ${year}</p>
+    </div>
+    <div class="honor-grid">
+      <div class="honor-row">${buildHonorCard(top5[0],1,false,defImg)}</div>
+      ${top5.length>=3?`<div class="honor-row">${buildHonorCard(top5[1],2,false,defImg)}${buildHonorCard(top5[2],3,false,defImg)}</div>`:''}
+      ${top5.length>=5?`<div class="honor-row">${buildHonorCard(top5[3],4,false,defImg)}${buildHonorCard(top5[4],5,false,defImg)}</div>`:''}
+    </div>`;
+  }
+  html+=buildFooter(todayKh,todayEn,'Approved by','Class Teacher',false)+'</div>';
+  const c=document.getElementById('en-pdf-content');
+  c.innerHTML=html;c.style.display='block';
+  document.getElementById('en-downloadBtn').style.display='block';
+  c.scrollIntoView({behavior:'smooth'});
 }
 
-function downloadResultsPDF() {
-  const content = document.getElementById('reportArea').innerHTML;
-  if (!content || content.trim() === '') { showToast('មិនទាន់មានទិន្នន័យ'); return; }
-  const gradeLabel = document.querySelector('#resGradeTabs button.active')?.textContent || 'ទាំងអស់';
-  const title = `MIKIDS_លទ្ធផល_${gradeLabel}`;
-  const win = window.open('', '_blank', 'width=900,height=700');
-  if (!win) { showToast('សូម​អនុញ្ញាត pop-up'); return; }
-  win.document.write(buildPrintPage(`<div style="font-family:'Noto Serif Khmer',serif;">${content}</div>`, title));
-  win.document.close();
-}
+function khDownloadPDF(){downloadPDF('kh-pdf-content','kh-downloadBtn',khSel.value,document.getElementById('kh-monthInput').value);}
+function enDownloadPDF(){downloadPDF('en-pdf-content','en-downloadBtn',enSel.value,document.getElementById('en-monthInput').value);}
 
-function downloadCertPDF() {
-  const content = document.getElementById('certArea').innerHTML;
-  if (!content || content.trim() === '') { showToast('មិនទាន់មានទិន្នន័យ'); return; }
-  const gradeVal = document.getElementById('cGrade').value;
-  const title = `MIKIDS_បត្រសរសើរ_${gradeVal === 'all' ? 'ទាំងអស់' : gradeVal}`;
-  const win = window.open('', '_blank', 'width=900,height=700');
-  if (!win) { showToast('សូម​អនុញ្ញាត pop-up'); return; }
-  win.document.write(buildPrintPage(content, title));
-  win.document.close();
-}
-
-function exportCSV() {
-  const headers = ['ល.រ','គោត្តនាម','ភេទ','ថ្នាក់','លេខ',
-    'ការណ្ណែន(1)','អានមិនខុស(3)','ការដាក់សំឡេង(2.5)','អានលឿន(2)','យល់(1.5)','សរុប(10)'];
-  const rows = allStudents.map(s => {
-    const sc = scores[s.code]||{};
-    const vals = CRITERIA.map(c=>(sc[c.key]!==undefined&&sc[c.key]!=='')?sc[c.key]:'');
-    return [s.no,`"${s.name}"`,s.sex,s.grade,s.disp,...vals,getTotal(s.code)||''].join(',');
-  });
-  const blob = new Blob(['\ufeff'+[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `MIKIDS_scores.csv`;
-  a.click();
-  showToast('Export CSV ជោគជ័យ!');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
+function downloadPDF(contentId,btnId,className,month){
+  const el=document.getElementById(contentId);
+  if(!el||!el.innerHTML.trim()){alert('Please generate a report first!');return;}
+  const btn=document.getElementById(btnId);
+  const orig=btn.innerHTML;
+  btn.innerHTML='⏳ Generating...';btn.disabled=true;
+  const W=794;el.style.width=W+'px';
+  setTimeout(()=>{
+    html2canvas(el,{scale:3,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,width:W,windowWidth:W})
+    .then(canvas=>{
+      el.style.width='';
+      const{jsPDF}=window.jspdf;
+      const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+      const A4W=210,A4H=297,mpp=A4W/canvas.width,imgH=canvas.height*mpp;
+      const imgData=canvas.toDataURL('image/jpeg',.95);
+      if(imgH<=A4H){pdf.addImage(imgData,'JPEG',0,0,A4W,imgH);}
+      else{
+        let yOff=0;
+        while(yOff<imgH){
+          if(yOff>0)pdf.addPage();
+          const srcY=yOff/mpp,sliceH=Math.min(A4H/mpp,canvas.height-srcY);
+          const sc=document.createElement('canvas');
+          sc.width=canvas.width;sc.height=sliceH;
+          sc.getContext('2d').drawImage(canvas,0,srcY,canvas.width,sliceH,0,0,canvas.width,sliceH);
+          pdf.addImage(sc.toDataURL('image/jpeg',.95),'JPEG',0,0,A4W,sliceH*mpp);
+          yOff+=A4H;
+        }
+      }
+      pdf.save(`MyKids_${(className||'class').replace(/\s+/g,'_')}_${month}_${Date.now()}.pdf`);
+      btn.innerHTML=orig;btn.disabled=false;
+    }).catch(err=>{el.style.width='';btn.innerHTML=orig;btn.disabled=false;alert('Error: '+err.message);});
+  },800);
 }
 </script>
 </body>
